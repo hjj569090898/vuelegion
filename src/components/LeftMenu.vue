@@ -10,14 +10,14 @@
       >
         <router-link to="/home">
           <el-menu-item index="0">
-            <i class="fa fa-margin fa-server"></i>
+            <i class="el-le-iconxiangmuguanli"></i>
             <span slot="title">首页</span>
           </el-menu-item>
         </router-link>
         <template v-for="item in items">
           <el-submenu v-if="item.children" :index="item.path" :key="item.path">
             <template slot="title">
-              <i :class="'el-icon-'+item.icon"></i>
+              <i :class="''+items.icon"></i>
               <span slot="title">{{item.name}}</span>
             </template>
             <router-link v-for="(citem,cindex) in item.children" :to="citem.path" :key="cindex">
@@ -42,7 +42,7 @@ export default {
     return {
       items: [
         {
-          icon: "document",
+          icon: "el-le-iconzijinguanli",
           name: "资金管理",
           path: "fund",
           badge:"",
@@ -53,14 +53,14 @@ export default {
           ]
         },
         {
-          icon: "fa-money1",
+          icon: "el-le-iconxiangmushenhe",
           name: "项目管理",
           path: "fund1",
           children: [{ path: "Form", name: "工程管理" },
           { path: "infoshow4", name: "计划管理" }]
         },
         {
-          icon: "fa",
+          icon: "el-le-iconcangchu",
           name: "仓储管理",
           path: "goodslist",
           children: [{ path: "goodslist", name: "库存信息" },
@@ -70,19 +70,20 @@ export default {
 
         },
         {
-          icon: "fa-asterisk",
+          icon: "el-le-iconHRrenshirenshiguanli",
           name: "个人中心",
           path: "info",
           children: [{ path: "infoshow", name: "个人信息" },
+          { path: "infoModify", name: "信息修改" },
           { path: "infoshow6", name: "考勤及薪资" }]
         },
          
          {
-          icon: "document",
+          icon: "el-le-iconrenshiguanli",
           name: "人事管理",
           path: "register",
           children: [{ path: "register", name: "人事变动" },
-          { path: "infoshow7", name: "人员入职" },
+          { path: "register", name: "人员入职" },
           { path: "infoshow8", name: "考勤管理" }
         
           
@@ -108,9 +109,7 @@ export default {
 .el-menu {
   border: none;
 }
-.fa-margin {
-  margin-right: 5px;
-}
+
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 210px;
   min-height: 400px;

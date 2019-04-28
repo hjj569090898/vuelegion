@@ -7,6 +7,7 @@ import Axios from 'axios';
 import '../src/axios/'
 import store from './store/store'
 import VueI18n from 'vue-i18n'
+import './assets/icon/iconfont.css'
 Vue.use(VueI18n) // 通过插件的形式挂载
 
 import ElementUI from 'element-ui'
