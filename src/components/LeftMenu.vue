@@ -56,7 +56,7 @@ export default {
           icon: "el-le-iconxiangmushenhe",
           name: "项目管理",
           path: "fund1",
-          children: [{ path: "Form", name: "工程管理" },
+          children: [{ path: "Project", name: "工程管理" },
           { path: "infoshow4", name: "计划管理" }]
         },
         {

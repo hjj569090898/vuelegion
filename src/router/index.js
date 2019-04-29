@@ -10,6 +10,7 @@ import stockin from '../views/stockin'
 import InfoShow from '../views/InfoShow'
 import goodslist from '../views/goodslist'
 import InfoModify from '../views/InfoModify'
+import Project from '../views/Project'
 
 Vue.use(Router)
 
@@ -30,6 +31,7 @@ const router = new Router({
         { path: '/resetpw', name: 'resetpw', component: resetpw },
         { path: '/home', name: 'home', component: Home },
         { path: '/infoshow', name: 'infoshow', component: InfoShow },
+        { path: '/project', name: 'project', component: Project },
         { path: '/infomodify', name: 'infomodify', component: InfoModify },
         { path: '/goodslist', name: 'goodslist', component: goodslist },
         { path: '/stockin', name: 'stockin', component: stockin },
