@@ -17,7 +17,7 @@ export default {
   },
   mounted() {
           window.onbeforeunload = function (e){
-             localStorage.removeItem('eleToken');
+           //  localStorage.removeItem('eleToken');
           }
   },
   methods: {

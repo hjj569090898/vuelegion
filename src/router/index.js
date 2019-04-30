@@ -11,6 +11,9 @@ import InfoShow from '../views/InfoShow'
 import goodslist from '../views/goodslist'
 import InfoModify from '../views/InfoModify'
 import Project from '../views/Project'
+import auditing from '../views/auditing'
+import payroll from '../views/payroll'
+import Finance from  '../views/Finance'
 
 Vue.use(Router)
 
@@ -35,6 +38,9 @@ const router = new Router({
         { path: '/infomodify', name: 'infomodify', component: InfoModify },
         { path: '/goodslist', name: 'goodslist', component: goodslist },
         { path: '/stockin', name: 'stockin', component: stockin },
+        { path: '/auditing', name: 'auditing', component: auditing },
+        { path: '/payroll', name: 'payroll', component: payroll },
+        { path: '/Finance', name: 'Finance', component: Finance },
       ]
     },
 

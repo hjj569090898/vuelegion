@@ -1,5 +1,6 @@
 <template>
   <div>
+    <el-divider></el-divider>
     <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="180px">
       <el-form-item label="用户名" prop="username">
         <el-input

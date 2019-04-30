@@ -34,7 +34,7 @@ export const GetStockIn = (params,params2) =>{return axios.get(`${host}/stockin/
 export const SearchStockIn = params =>{return axios.get(`${host}/stockin/?search=${params}`)}
 //筛选申请条件的入库信息
 export const StateStockIn = params =>{return axios.get(`${host}/stockin/?state=${params}`)}
-//创建采购申请�?
+//创建采购申请�?
 export const StockIn = params => {return axios.post(`${host}/stockin/`), params}
 //修改入库申请信息
 export const UpdateStockIn = (params2) =>{return axios.patch(`${host}/stockin/`,params2)}
@@ -47,4 +47,10 @@ export const GetStockOut = params =>{
   return axios.get(`${host}/stockout/`)
 }
 //创建领料申请
-export const StockOut = params => {return axios.post(`{host}/stockout/`), params}
+export const AddStockOut = params => {return axios.post(`${host}/stockout/`), params}
+
+//查看工程
+export const ListProject = params => {return axios.get(`${host}/project/?page=${params}`)}
+
+//查询工程
+export const QueryProject = params => {return axios.get(`${host}/project`+`${params}/`)}
