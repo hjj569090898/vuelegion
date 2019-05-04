@@ -26,14 +26,15 @@
     <el-table :data="Project"  
     @row-click="handdle"
     border style="width: 100%">
-<el-table-column prop="id" label="入库编号" width="140"></el-table-column>
-<el-table-column prop="pjname" label="工程名" width="110"></el-table-column>
+<el-table-column prop="id" label="项目编号" width="140"></el-table-column>
+<el-table-column prop="pjname" label="工程名" width="160"></el-table-column>
 <el-table-column prop="planstart" label="计划开始时间" width="130"></el-table-column>
 <el-table-column prop="planend" label="计划结束时间" width="130"></el-table-column>
 <el-table-column prop="actualstart" label="实际开始时间" width="130"></el-table-column>
 <el-table-column prop="actualend" label="实际结束时间" width="130"></el-table-column>
 <el-table-column prop="leader" label="负责人" width="110"></el-table-column>
 <el-table-column prop="state" label="状态" width="110"></el-table-column>
+<el-table-column prop="pnow" label="阶段" width="110"></el-table-column>
  <el-table-column label="操作" width="220">
         <template slot-scope="scope">
           <el-button @click="ClickList(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button>
@@ -64,8 +65,10 @@
         <!-- data="tableData.slice((currentPage-1)pagesize,currentPagepagesize)"； -->
       </el-pagination>
 
-<el-dialog title="收货地址" :visible.sync="dialogTableVisible">
-    <el-button type="primary" @click="routerto()">查看工程详情</el-button>
+<el-dialog title= 123 :visible.sync="dialogTableVisible">
+    <div style="text-align: right;">
+     
+     <el-button type="primary" @click="routerto()">查看工程任务详情</el-button> </div>
     
 
 <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
@@ -118,7 +121,7 @@ export default {
       //  执行echarts方法
         this.drawLine()
       })
-        this.aproject = row;
+        this.aproject = row.pjname;
 
       },
       getList(){
@@ -162,7 +165,7 @@ export default {
         series: [{
           name: '销量',
           type: 'bar',
-          data: [5, 20, 36, 10, 10, 20]
+          data: [5, 20, 36, 110, 10, 20]
         }]
       });
     }
