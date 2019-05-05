@@ -9,7 +9,7 @@
      </div>
       
      <div style="text-align: right;">
-         <el-button type="success">+ 项目添加</el-button>
+         <el-button type="success" @click="ClickInsert()">+ 项目添加</el-button>
      </div>
       
      </div>
@@ -21,6 +21,7 @@
       class="filter-item"
       prefix-icon="el-icon-search"
     />
+    <el-button type="success" @click="ClickInsert()">查询</el-button>
     <!-- @keyup.enter.native="SeachClick(Search.id)"  -->
 
     <el-table :data="Project"  
@@ -66,17 +67,71 @@
       </el-pagination>
 
 <el-dialog title= 123 :visible.sync="dialogTableVisible">
-    <div style="text-align: right;">
-     
+    <div style="text-align: right;"> 
      <el-button type="primary" @click="routerto()">查看工程任务详情</el-button> </div>
-    
-
 <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
-
-
-
-
 </el-dialog>
+
+<el-dialog title="项目立项" :visible.sync="InsertFormVisible" :close-on-click-modal="true">
+      <el-form :model="InsertForm" label-width="80px">
+           
+      <el-form-item label="工程名称">
+          <el-input v-model="InsertForm.pjname"></el-input>
+        </el-form-item>
+
+<el-form-item label="工程状态">
+<el-select  v-model="InsertForm.state" placeholder="工程状态">
+    <el-option
+   v-for="item in stateselect"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select> 
+</el-form-item> 
+
+        <el-form-item label="计划开始">
+          <el-date-picker
+      v-model="InsertForm.planstart"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="选择计划开工时间">
+    </el-date-picker>
+        </el-form-item>
+        <el-form-item label="计划完工">
+         <el-date-picker
+      v-model="InsertForm.planend"
+      
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="选择计划完工时间">
+    </el-date-picker>
+        </el-form-item>
+        <el-form-item label="负责人">
+          <el-input  v-model="InsertForm.leader"></el-input>
+        </el-form-item>
+         <el-form-item label="合同编号">
+          <el-input v-model="InsertForm.ctid"></el-input>
+        </el-form-item>
+        <el-form-item label="工程阶段">
+         <el-select  v-model="InsertForm.pnow"  placeholder="工程阶段">
+    <el-option
+   v-for="item in pnowselect"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select>  
+        </el-form-item>
+        
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="InsertFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleInsert()">确 定</el-button>
+      </div>
+    </el-dialog>
 
     </div>
   </div>
@@ -90,7 +145,9 @@ require('echarts/lib/chart/bar')
 // 引入提示框和title组件
 require('echarts/lib/component/tooltip')
 require('echarts/lib/component/title')
-import { ListProject} from "../api/api";
+import { ListProject,
+          AddProject
+    } from "../api/api";
 import { truncate } from 'fs';
 import router from '../router/index'
 import { homedir } from 'os';
@@ -100,11 +157,29 @@ export default {
     return {
       tip: "请输入项目关键词",
       aproject:"",
+      stateselect:[{
+        value:"正常",
+        label:"正常"
+      },{value:"延期",label:"延期"},{value:"提前",label:"提前"},{value:"其他",label:"其他"}],
+      pnowselect:[{
+        value:"未开工",
+        label:"未开工"
+      },{value:"施工中",label:"施工中"},{value:"已完工",label:"已完工"},{value:"其他",label:"其他"}],
       Project:[],
           id:"123",
           PageInfo:1,
       currentPage: 1,
       dialogTableVisible:false,
+      InsertFormVisible:false,
+      InsertForm:{
+        pjname:"",
+        state:"",
+        planstart:"",
+        planend:"",
+        leader:"",
+        ctid:"",
+        pnow:""
+      }
     };
   },
     created() {
@@ -150,6 +225,21 @@ export default {
     },
     routerto(){
       router.go(-1);
+    },
+    ClickInsert(){
+      this.InsertFormVisible = true;
+      console.log("项目立项")
+    },
+    handleInsert()
+    {
+      console.log(this.InsertForm);
+      AddProject(this.InsertForm).then(response=>{
+        this.InsertFormVisible = false;
+        console.log(InsertForm);
+        console.log("添加成功");
+      }).catch(function(error){
+        console.log(error);
+      });
     },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例

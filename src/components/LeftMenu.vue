@@ -43,7 +43,7 @@ export default {
       items: [
         {
           icon: "el-le-iconrongzixiangmu00",
-          name: "资金管理",
+          name: "财务管理",
           path: "fund",
           badge:"",
           children: [{ path: "Finance", name: "  资金流水" },
@@ -82,7 +82,7 @@ export default {
           icon: "el-le-iconrenshiguanli",
           name: "人事管理",
           path: "register",
-          children: [{ path: "register", name: "  人事变动" },
+          children: [{ path: "employee", name: "人员管理" },
           { path: "register", name: "  人员入职" },
           { path: "infoshow8", name: "  考勤管理" }
         

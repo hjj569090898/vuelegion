@@ -1,6 +1,9 @@
 <template>
   <div>
-    <el-divider></el-divider>
+    <table>
+      <tr>
+        <td>
+    <el-divider>请填写注册信息</el-divider>
     <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="180px">
       <el-form-item label="用户名" prop="username">
         <el-input
@@ -32,6 +35,12 @@
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model="registerUser.mobile" style="width: 280px;" placeholder="请输入手机号"></el-input>
       </el-form-item>
+      <el-form-item label="真实姓名" prop="mobile">
+        <el-input v-model="registerUser.name" style="width: 280px;" placeholder="请输入真实姓名"></el-input>
+      </el-form-item>
+      <el-form-item label="身份证号" prop="mobile">
+        <el-input v-model="registerUser.credit" style="width: 280px;" placeholder="请输入身份证号"></el-input>
+      </el-form-item>
       <el-form-item label="选择部门">
         <el-select v-model="registerUser.groupid" style="width: 280px;" placeholder="请选择部门">
           <el-option
@@ -42,6 +51,14 @@
           ></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="额外权限">
+    
+        
+    <el-checkbox-group v-model="permissions" size="small">
+      <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button>
+    </el-checkbox-group>
+  
+      </el-form-item>
       <el-form-item>
         <el-button
           type="primary"
@@ -51,7 +68,23 @@
         >注 册</el-button>
       </el-form-item>
     </el-form>
+    <td>
+      <td> <div>
+         <el-divider></el-divider>
+      <el-upload
+  class="avatar-uploader"
+  action="https://jsonplaceholder.typicode.com/posts/"
+  :show-file-list="false"
+  :on-success="handleAvatarSuccess"
+  :before-upload="beforeAvatarUpload">
+  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+</el-upload>
+    </div></td>
+    </tr>
+    </table>
   </div>
+
 </template>
 
 <script>
@@ -74,6 +107,13 @@ export default {
       }
     };
     return {
+      pers : [
+        {id:"stockin",label:'出库'},
+        {id:"stockout",label:'入库'},
+        {id:3,label:'广州'}, 
+        {id:4,label:'深圳'}
+        ],
+       imageUrl: '',
       registerUser: {
         username: "",
         credit:"",
@@ -86,6 +126,7 @@ export default {
       },
       isexits: "0",
       username: "",
+      permissions:[],
       group: [
         { value: "1", label: "行政部" },
         { value: "2", label: "人事部" },
@@ -133,6 +174,11 @@ export default {
       }
     };
   },
+   computed: {
+    user() {
+      return this.$store.getters.user;
+    }
+  },
   methods: {
     submitForm() {
           register(this.registerUser.registerUser)
@@ -152,6 +198,21 @@ export default {
             });
          
     },
+    handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/png';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
     validateisexits() {
       username(this.registerUser.username)
         .then(response => {
@@ -170,5 +231,29 @@ export default {
   }
 };
 </script>
-
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>
 

@@ -44,7 +44,7 @@
             icon="el-icon-edit-outline"
           >编辑</el-button>
           <el-button
-            @click="ClickDelete(scope.row.in_id)"
+            @click="ClickDelete(scope.row.id)"
             type="text"
             size="medium"
             icon="el-icon-delete"

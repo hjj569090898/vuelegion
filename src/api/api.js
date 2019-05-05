@@ -51,6 +51,19 @@ export const AddStockOut = params => {return axios.post(`${host}/stockout/`), pa
 
 //查看工程
 export const ListProject = params => {return axios.get(`${host}/project/?page=${params}`)}
+//工程立项
+export const AddProject = params =>{return axios.post(`${host}/project/`), params};
 
 //查询工程
 export const QueryProject = params => {return axios.get(`${host}/project`+`${params}/`)}
+
+//财务信息
+export const getFinance =  (params,params2) =>{return axios.get(`${host}/finance/?type=${params}`+`&page=${params2}`)}
+
+export const searchFinance =  (params) =>{return axios.get(`${host}/finance/`+`${params}`)}
+
+//获得所有职员信息分组
+export const UserBygroupid = (params,params2) =>{return axios.get(`${host}/getuserbyg/?groupid=${params}`+`&page=${params2}`)}
+
+//获得所有职员信息
+export const getAllUser = params =>{return axios.get(`${host}/getuser/?page=${params}`)}
