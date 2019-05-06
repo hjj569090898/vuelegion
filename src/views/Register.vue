@@ -70,6 +70,7 @@
     </el-form>
     <td>
       <td> <div>
+        请上传头像(jpg)
          <el-divider></el-divider>
       <el-upload
   class="avatar-uploader"
@@ -137,7 +138,7 @@ export default {
         { value: "7", label: "其他" }
       ],
       rules: {
-        name: [
+        username: [
           { required: true, message: "用户名不能为空", trigger: "change" },
           { min: 2, max: 30, message: "长度在 2 到 30 个字符", trigger: "blur" },
           { validator: validatePass3, trigger: "blur" }

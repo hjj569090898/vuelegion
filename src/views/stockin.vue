@@ -2,14 +2,14 @@
   <div>
     <el-input
       :placeholder="tip"
-      v-model="Search.id"
+      v-model="nowid"
       style="width: 280px;"
       class="filter-item"
       prefix-icon="el-icon-search"
-      @keyup.enter.native="SeachClick(Search.id)"
+      @keyup.enter.native="SeachClick"
     />
 
-    <el-select v-model="value1" placeholder="全部" style="width: 200px" @change="HandleSearch">
+    <el-select v-model="nowstate" placeholder="全部" style="width: 200px" @change="getList">
       <el-option v-for="item in Selects" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
     <el-button type="success" round @click="ClickInsert()">添加入库申请</el-button>
@@ -97,7 +97,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="InsertFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleInsert(InsertForm)">确 定</el-button>
+        <el-button type="primary" @click="handleInsert">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -220,6 +220,8 @@ export default {
       value1: "",
       value2: "",
       value3: "",
+      nowstate:"",
+      nowid:"",
       chooseType:"",
       UpdateFormVisible: false,
       DeletedialogVisible: false,
@@ -249,11 +251,11 @@ export default {
       this.currentPage = 1;
       this.Search.id = "";
       this.value1 = "";
-      GetStockIn("",this.currentPage)
+      GetStockIn(this.nowstate,this.currentPage)
         .then(response => {
-          this.StockIn = response.data;
+          this.StockIn = response.data.Stockin;
           // this.PageInfo = response.data;
-          this.PageInfo.count = 18;
+          this.PageInfo.count = response.data.length;
         })
         .catch(function(error) {
           console.log(error);
@@ -280,10 +282,9 @@ export default {
     ClickInsert(){
       this.InsertFormVisible = true;
     },
-    handleInsert(val)
+    handleInsert()
     {
-      // this.InsertForm = val;
-      console.log(this.InsertForm);
+      
       StockIn(this.InsertForm).then(response=>{
         this.InsertFormVisible = false;
         console.log(InsertForm);
@@ -298,7 +299,7 @@ export default {
       this.value1 = "";
       GetStockIn("",this.currentPage)
         .then(response => {
-          this.StockIn = response.data;
+          this.StockIn = response.data.Stockin;
           console.log(response.data); //请求正确时执行的代码
         })
         .catch(function(response) {
@@ -306,10 +307,9 @@ export default {
         });
     },
 
-    SeachClick(val) {
-      this.search = val;
-      if (this.search != "") {
-        SearchStockIn(this.search)
+    SeachClick() {
+      if (this.nowid != "") {
+        SearchStockIn(this.nowid)
           .then(response => {
             this.StockIn = response.data;
             console.log("查询成功");
@@ -318,18 +318,7 @@ export default {
             console.log(response); //发生错误时执行的代码
           });
       } else {
-        this.currentPage = 1;
-        this.Search.id = "";
-        this.value1 = "";
-        GetStockIn(this.currentPage, this.value1, this.Search.id)
-          .then(response => {
-            this.StockIn = response.data;
-            this.PageInfo = response.data;
-            console.log(currentPage);
-          })
-          .catch(function(error) {
-            console.log(error);
-          });
+        getList();
       }
     },
     HandleSearch: function(value) {

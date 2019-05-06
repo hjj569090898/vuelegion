@@ -31,11 +31,11 @@ export const username = params =>{
 //查看采购信息情况
 export const GetStockIn = (params,params2) =>{return axios.get(`${host}/stockin/?state=${params}`+`&page=${params2}`)}
 //搜索采购信息
-export const SearchStockIn = params =>{return axios.get(`${host}/stockin/?search=${params}`)}
+export const SearchStockIn = params =>{return axios.get(`${host}/stockin/${params}`)}
 //筛选申请条件的入库信息
 export const StateStockIn = params =>{return axios.get(`${host}/stockin/?state=${params}`)}
-//创建采购申请�?
-export const StockIn = params => {return axios.post(`${host}/stockin/`), params}
+//创建采购申请
+export const StockIn = params => {return axios.post(`${host}/stockin/`, params)}
 //修改入库申请信息
 export const UpdateStockIn = (params2) =>{return axios.patch(`${host}/stockin/`,params2)}
 //删除入库申请信息
@@ -67,3 +67,8 @@ export const UserBygroupid = (params,params2) =>{return axios.get(`${host}/getus
 
 //获得所有职员信息
 export const getAllUser = params =>{return axios.get(`${host}/getuser/?page=${params}`)}
+
+//获得审核列表
+export const getauditing =  (params,params2,params3) =>{return axios.get(`${host}/auditing/?type=${params}`+`&state=${params2}`+`&page=${params3}`)}
+//查询审核
+export const queryauditing = params =>{return axios.get(`${host}/auditing/`+`${params}`)}

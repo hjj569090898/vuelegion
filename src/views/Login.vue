@@ -65,9 +65,11 @@ export default {
 
             // 页面跳转
             this.$router.push("/index");
+            alert(res.data.result);
           });
         } else {
           console.log("error submit!!");
+          Message.error(res.data.result);
           return false;
         }
       });
