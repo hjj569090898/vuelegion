@@ -146,7 +146,8 @@ require('echarts/lib/chart/bar')
 require('echarts/lib/component/tooltip')
 require('echarts/lib/component/title')
 import { ListProject,
-          AddProject
+          AddProject,
+          QueryProject
     } from "../api/api";
 import { truncate } from 'fs';
 import router from '../router/index'
@@ -196,7 +197,7 @@ export default {
       //  执行echarts方法
         this.drawLine()
       })
-        this.aproject = row.pjname;
+        this.aproject = row.id;
 
       },
       getList(){
@@ -224,7 +225,7 @@ export default {
         });
     },
     routerto(){
-      router.go(-1);
+           this.$router.push({path:'/progress',query:{projectid:this.aproject}});
     },
     ClickInsert(){
       this.InsertFormVisible = true;

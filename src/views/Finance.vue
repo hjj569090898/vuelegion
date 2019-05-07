@@ -63,14 +63,14 @@ export default {
           label: "全部"
         },
         {
-          value: "1",
-          label: "合同"
+          value: "仓储",
+          label: "仓储"
         },
         {
-          value: "2",
-          label: "工程"
+          value: "合同",
+          label: "合同"
         },
-        { value: "3", label: "仓储" },{ value: "4", label: "工资" }
+        { value: "个人", label: "个人" },{ value: "工资", label: "工资" }
       ],
       Finances: [],
       search: {

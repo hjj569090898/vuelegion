@@ -48,7 +48,7 @@ export default {
           badge:"",
           children: [{ path: "Finance", name: "  资金流水" },
           {path:"auditing", name:"  资金申用审核"},
-          {path:"payroll", name:"  工资发放"},
+          {path:"payroll", name:"  工资发放1"},
           
           ]
         },
@@ -57,14 +57,14 @@ export default {
           name: "项目管理",
           path: "fund1",
           children: [{ path: "Project", name: "  工程管理" },
-          { path: "infoshow4", name: "  计划管理" }]
+          { path: "Progress", name: "  计划管理1" }]
         },
         {
           icon: "el-le-iconcangchu",
           name: "仓储管理",
           path: "goodslist",
-          children: [{ path: "goodslist", name: "库存信息" },
-          { path: "goodslist5", name: "  出库信息" },
+          children: [{ path: "goodslist", name: " 库存信息" },
+          { path: "stockout", name: "  出库管理" },
           { path: "stockin", name: "  入库信息" },
           ]
 
@@ -75,7 +75,7 @@ export default {
           path: "info",
           children: [{ path: "infoshow", name: "  个人信息" },
           { path: "infoModify", name: "  信息修改" },
-          { path: "infoshow6", name: "  考勤及薪资" }]
+          { path: "infoshow6", name: "  考勤及薪资1" }]
         },
          
          {
@@ -83,8 +83,7 @@ export default {
           name: "人事管理",
           path: "register",
           children: [{ path: "employee", name: "人员管理" },
-          { path: "register", name: "  人员入职" },
-          { path: "infoshow8", name: "  考勤管理" }
+          { path: "infoshow8", name: "  考勤管理1" }
         
           
           ]

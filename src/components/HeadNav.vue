@@ -91,7 +91,7 @@ export default {
     },
     resetpw() {
       // 密码重置
-      this.$router.push("/resetpw");
+      this.$router.push("/infomodify");
     },
 
     logout() {

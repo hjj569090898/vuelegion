@@ -28,6 +28,14 @@ export const getuserInfo = params =>{
 export const username = params =>{
   return axios.get(`${host}/username/?username=${params}`)
 }
+export const getmyuser  = params =>{
+  return axios.get(`${host}/userinfobyname/?username=${params}`)
+}
+//获得用户权限
+export const getpermission  = params =>{
+  return axios.get(`${host}/userpermission/?username=${params}`)
+}
+
 //查看采购信息情况
 export const GetStockIn = (params,params2) =>{return axios.get(`${host}/stockin/?state=${params}`+`&page=${params2}`)}
 //搜索采购信息
@@ -55,7 +63,7 @@ export const ListProject = params => {return axios.get(`${host}/project/?page=${
 export const AddProject = params =>{return axios.post(`${host}/project/`), params};
 
 //查询工程
-export const QueryProject = params => {return axios.get(`${host}/project`+`${params}/`)}
+export const QueryProject = params => {return axios.get(`${host}/project/`+`${params}/`)}
 
 //财务信息
 export const getFinance =  (params,params2) =>{return axios.get(`${host}/finance/?type=${params}`+`&page=${params2}`)}
@@ -72,3 +80,6 @@ export const getAllUser = params =>{return axios.get(`${host}/getuser/?page=${pa
 export const getauditing =  (params,params2,params3) =>{return axios.get(`${host}/auditing/?type=${params}`+`&state=${params2}`+`&page=${params3}`)}
 //查询审核
 export const queryauditing = params =>{return axios.get(`${host}/auditing/`+`${params}`)}
+//审核
+export const auditi = (params,params2,params3,params4,params5) =>
+{return axios.patch(`${host}/auditing/?id=${params}`+`&state=${params2}`+`&admin=${params3}`+`&adate=${params4}`+`&advice=${params5}`)}

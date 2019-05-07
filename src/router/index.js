@@ -7,14 +7,17 @@ import Nofind from '../views/404'
 import Login from '../views/Login'
 import Home from '../views/Home'
 import stockin from '../views/stockin'
+import stockout from '../views/stockout'
 import InfoShow from '../views/InfoShow'
 import goodslist from '../views/goodslist'
 import InfoModify from '../views/InfoModify'
 import Project from '../views/Project'
+import Progress from '../views/Progress'
 import auditing from '../views/auditing'
 import payroll from '../views/payroll'
 import Finance from  '../views/Finance'
 import employee from '../views/employee'
+
 
 Vue.use(Router)
 
@@ -39,10 +42,13 @@ const router = new Router({
         { path: '/infomodify', name: 'infomodify', component: InfoModify },
         { path: '/goodslist', name: 'goodslist', component: goodslist },
         { path: '/stockin', name: 'stockin', component: stockin },
+        { path: '/stockout', name: 'stockout', component: stockout },
         { path: '/auditing', name: 'auditing', component: auditing },
         { path: '/payroll', name: 'payroll', component: payroll },
         { path: '/Finance', name: 'Finance', component: Finance },
         { path: '/employee', name: 'employee', component: employee },
+        { path: '/Progress', name: 'Progress', component: Progress },
+
       ]
     },
 

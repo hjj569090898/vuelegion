@@ -1,8 +1,8 @@
 <template>
   <div>
-    <table>
-      <tr>
-        <td>
+    <el-steps :active="active" finish-status="success">
+     <el-step title="步骤 1">
+       <div>
     <el-divider>请填写注册信息</el-divider>
     <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="180px">
       <el-form-item label="用户名" prop="username">
@@ -68,8 +68,10 @@
         >注 册</el-button>
       </el-form-item>
     </el-form>
-    <td>
-      <td> <div>
+       </div>
+     </el-step>
+     <el-step title="步骤 2">
+     <div>
         请上传头像(jpg)
          <el-divider></el-divider>
       <el-upload
@@ -81,9 +83,10 @@
   <img v-if="imageUrl" :src="imageUrl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
 </el-upload>
-    </div></td>
-    </tr>
-    </table>
+    </div>
+     </el-step>
+    </el-steps>
+    <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
   </div>
 
 </template>
@@ -115,6 +118,7 @@ export default {
         {id:4,label:'深圳'}
         ],
        imageUrl: '',
+       active: 0,
       registerUser: {
         username: "",
         credit:"",
@@ -181,6 +185,9 @@ export default {
     }
   },
   methods: {
+    next() {
+        if (this.active++ > 2) this.active = 0;
+      },
     submitForm() {
           register(this.registerUser.registerUser)
             .then(res => {

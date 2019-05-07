@@ -1,6 +1,6 @@
 <template>
     <div>
-        
+        <el-divider content-position="left">审核申请信息</el-divider>
 <el-input
       :placeholder="tip"
       v-model="queryid"
@@ -20,6 +20,46 @@
       <el-option v-for="item in stateSelects" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
 
+<el-badge :value= currentPage class="item">
+  <el-button size="small">未审核</el-button>
+</el-badge>
+<el-dialog title="审核申请信息" :visible.sync="UpdateFormVisible" :close-on-click-modal="true">
+      <el-form :model="UpdateForm" label-width="80px">
+        <el-form-item label="审核编号">
+          <el-input v-model="UpdateForm.id" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="关联编号">
+          <el-input v-model="UpdateForm.linked" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="申请原因">
+          <el-input v-model="UpdateForm.reason" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="申请时间">
+          <el-input v-model="UpdateForm.date" :disabled="true"></el-input>
+        </el-form-item>
+        <el-form-item label="金额" >
+          <el-input-number v-model="UpdateForm.money" :disabled="true"></el-input-number>
+        </el-form-item>
+        <el-form-item label="申请人">
+          <el-input type="textarea" v-model="UpdateForm.applicant" :disabled="true"></el-input>
+        </el-form-item>
+
+        <el-form-item label="审核状态">
+ <el-select v-model="UpdateForm.state" placeholder="全部" style="width: 200px" @change="getList">
+      <el-option v-for="item in statejust" :key="item.value" :label="item.label" :value="item.value"></el-option>
+    </el-select>
+        </el-form-item>
+
+        <el-form-item label="审核反馈">
+          <el-input type="textarea" v-model="UpdateForm.advice"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="UpdateFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="HandleUpdate" >确 定</el-button>
+      </div>
+    </el-dialog>
 
 
    <el-table :data="listauditing"  
@@ -70,8 +110,10 @@
 <script>
 import { 
           getauditing,
-          queryauditing
+          queryauditing,
+          auditi
     } from "../api/api";
+import { throws } from 'assert';
 export default {
     data(){
         return {
@@ -82,12 +124,15 @@ export default {
              PageInfo:1,
             querytype:"",
             querystate:"",
+            UpdateFormVisible:false,
+            nowuser:"",
+            autiable:"true",
             typeSelects:[{
           value: "",
           label: "全部"
         },
         {
-          value: "仓储申用",
+          value: "仓储入库",
           label: "仓储申用"
         },
         {
@@ -106,10 +151,40 @@ export default {
           label: "不通过"
         },
         { value: "通过", label: "通过" }],
+        statejust:[
+        {
+          value: "审核中",
+          label: "审核中"
+        },
+        {
+          value: "不通过",
+          label: "不通过"
+        },
+        { value: "通过", label: "通过" }],
+        UpdateForm: {
+        id: "",
+        linked: "",
+        // goodsname:"",
+        // now_num:"",
+        reason: "",
+        money: 0,
+        type: "",
+        state:"",
+        applicant:"" ,
+        date:"",
+        adate:"",
+        advice:"",
+        reason:"",
+      },
         }
     },
       created() {
     this.getList();
+  },
+   computed: {
+    user() {
+      return this.$store.getters.user;
+    }
   },
    methods: {
      getList(){
@@ -124,6 +199,23 @@ export default {
      },
     handdle(){
       //行点击
+      console.log("行点击了");
+    },
+     ClickUpdate(row) {
+      this.UpdateFormVisible = true;
+      this.UpdateForm = Object.assign({}, row);
+    },
+    HandleUpdate() {
+      this.nowuser = localStorage.getItem("User");
+      // this.UpdateForm.adate = new Date();
+      var myDate = new Date();
+      this.UpdateForm.adate = myDate.toLocaleString( );;
+      auditi(this.UpdateForm.id,this.UpdateForm.state,this.nowuser,this.UpdateForm.adate,this.UpdateForm.advice).then(res => {
+        this.UpdateFormVisible = false;
+        alert("修改成功！");
+      }) .catch(function(error) {
+          console.log(error);
+        });
     },
     HandleSearch(){
       if(this.queryid==""){
