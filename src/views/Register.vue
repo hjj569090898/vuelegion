@@ -1,8 +1,12 @@
 <template>
   <div>
-    <el-steps :active="active" finish-status="success">
-     <el-step title="步骤 1">
-       <div>
+  
+    <el-row>
+  <el-col :span="7"><div><el-divider>&nbsp;</el-divider></div></el-col>
+  <el-col :span="8">
+    <el-container>
+  <el-main>
+     <div v-if="active===0">
     <el-divider>请填写注册信息</el-divider>
     <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="180px">
       <el-form-item label="用户名" prop="username">
@@ -51,42 +55,135 @@
           ></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="额外权限">
-    
-        
-    <el-checkbox-group v-model="permissions" size="small">
-      <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button>
-    </el-checkbox-group>
-  
-      </el-form-item>
-      <el-form-item>
-        <el-button
-          type="primary"
-          class="submit_btn"
-          :disabled="isexits != 0"
-          @click="submitForm"
-        >注 册</el-button>
-      </el-form-item>
     </el-form>
        </div>
-     </el-step>
-     <el-step title="步骤 2">
-     <div>
-        请上传头像(jpg)
-         <el-divider></el-divider>
+       
+     <div v-if="active===2">
+         <el-divider> 请上传头像(jpg)</el-divider>
       <el-upload
   class="avatar-uploader"
-  action="https://jsonplaceholder.typicode.com/posts/"
+  action="http://127.0.0.1:8083/upload"
   :show-file-list="false"
+
   :on-success="handleAvatarSuccess"
   :before-upload="beforeAvatarUpload">
   <img v-if="imageUrl" :src="imageUrl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
 </el-upload>
     </div>
+
+<div v-if="active===1">
+
+     <el-divider>请填写权限信息</el-divider>
+    <el-checkbox-group v-model="permissions" size="small">
+      <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button>
+    </el-checkbox-group>
+  
+</div>
+    </el-main>
+
+
+  <el-footer><el-steps :active="active" finish-status="success">
+     <el-step title="基本信息">
      </el-step>
-    </el-steps>
+     <el-step title="权限信息">
+       </el-step>
+       <el-step title="个人头像">
+       </el-step>
+    </el-steps></el-footer>
+</el-container>
+    
+
+    <div v-if="active!=3">
     <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+    <div v-if="active!=0">
+    <el-button  @click="pre">上一步</el-button>
+    </div>
+    </div>
+    
+    
+  </el-col>
+
+  <el-col :span="9"><div><el-divider>&nbsp;</el-divider></div></el-col>
+</el-row>
+
+
+<div v-if="active===3">
+  <el-row>
+  <el-col :span="8">
+   <el-divider>基本信息</el-divider>
+    <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="180px">
+      <el-form-item label="用户名" prop="username">
+        <el-input
+          v-model="registerUser.username"
+          @blur="validateisexits(registerUser.name)"
+          style="width: 280px;"
+          placeholder="请输入用户名"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input
+          v-model="registerUser.password"
+          style="width: 280px;"
+          placeholder="请输入密码"
+          type="password"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="确认密码" prop="password2">
+        <el-input
+          v-model="registerUser.password2"
+          style="width: 280px;"
+          placeholder="请确认密码"
+          type="password"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="registerUser.email" style="width: 280px;" placeholder="请输入邮箱"></el-input>
+      </el-form-item>
+      <el-form-item label="手机号" prop="mobile">
+        <el-input v-model="registerUser.mobile" style="width: 280px;" placeholder="请输入手机号"></el-input>
+      </el-form-item>
+      <el-form-item label="真实姓名" prop="mobile">
+        <el-input v-model="registerUser.name" style="width: 280px;" placeholder="请输入真实姓名"></el-input>
+      </el-form-item>
+      <el-form-item label="身份证号" prop="mobile">
+        <el-input v-model="registerUser.credit" style="width: 280px;" placeholder="请输入身份证号"></el-input>
+      </el-form-item>
+      <el-form-item label="选择部门">
+        <el-select v-model="registerUser.groupid" style="width: 280px;" placeholder="请选择部门">
+          <el-option
+            v-for="item in group"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+    </el-form>
+  </el-col>
+  <el-col :span="8">
+<el-divider>权限信息</el-divider>
+    <el-checkbox-group v-model="permissions" size="small">
+      <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button>
+    </el-checkbox-group>
+    <el-button style="margin-top: 12px;" @click="submitForm" >确认完毕，注册</el-button></el-col>
+  <el-col :span="8">
+     <el-divider> 个人头像</el-divider>
+      <el-upload
+  class="avatar-uploader"
+  action="http://127.0.0.1:8083/upload"
+  :show-file-list="false"
+
+  :on-success="handleAvatarSuccess"
+  :before-upload="beforeAvatarUpload">
+  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+</el-upload>
+  </el-col>
+</el-row>
+   
+    </div>
+
   </div>
 
 </template>
@@ -188,6 +285,9 @@ export default {
     next() {
         if (this.active++ > 2) this.active = 0;
       },
+       pre() {
+         this.active--;
+      },
     submitForm() {
           register(this.registerUser.registerUser)
             .then(res => {
@@ -259,9 +359,15 @@ export default {
     text-align: center;
   }
   .avatar {
-    width: 178px;
-    height: 178px;
+    width: 278px;
+    height: 278px;
     display: block;
   }
+  .showable {
+    display: none;
+  }
+  body{ text-align:center}
+  #main{ margin:0 auto}
+
 </style>
 

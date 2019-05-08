@@ -1,30 +1,17 @@
 <template>
 
   <div>
+    <el-row>
+  <el-col :span="3"><div><el-divider></el-divider></div></el-col>
+  <el-col :span="9">
     <el-divider></el-divider>
     <el-form :model="registerUser" :rules="rules" ref="registerForm" label-width="180px">
-      <el-form-item label="用户名" prop="username">
+      <el-form-item label="账号名" prop="username">
         <el-input
           v-model="registerUser.username"
-          @blur="validateisexits(registerUser.name)"
           style="width: 280px;"
           placeholder="请输入用户名"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input
-          v-model="registerUser.password"
-          style="width: 280px;"
-          placeholder="请输入密码"
-          type="password"
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="确认密码" prop="password2">
-        <el-input
-          v-model="registerUser.password2"
-          style="width: 280px;"
-          placeholder="请确认密码"
-          type="password"
+          disabled   
         ></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
@@ -33,8 +20,19 @@
       <el-form-item label="手机号" prop="mobile">
         <el-input v-model="registerUser.mobile" style="width: 280px;" placeholder="请输入手机号"></el-input>
       </el-form-item>
-      <el-form-item label="选择部门">
-        <el-select v-model="registerUser.groupid" style="width: 280px;" placeholder="请选择部门">
+      <el-form-item label="真实姓名" prop="name">
+        <el-input v-model="registerUser.name" style="width: 280px;" placeholder="请输入真实姓名"></el-input>
+      </el-form-item>
+      <el-form-item label="身份证号" prop="credit">
+        <el-input v-model="registerUser.credit" style="width: 280px;" placeholder="请输入身份证号"></el-input>
+      </el-form-item>
+       <el-form-item label="生日" prop="credit">
+        <el-input v-model="registerUser.birthday" style="width: 280px;" placeholder="请输入生日"></el-input>
+      </el-form-item>
+      <el-form-item label="部门">
+        <el-select v-model="registerUser.groupid" style="width: 280px;" placeholder="请选择部门"
+        :disabled="groupable"
+        >
           <el-option
             v-for="item in group"
             :key="item.value"
@@ -45,18 +43,22 @@
       </el-form-item>
       <el-form-item>
         <el-button
+        @click="ClickModify"
           type="primary"
           class="submit_btn"
-          :disabled="isexits != 0"
-          @click="submitForm"
-        >注 册</el-button>
+        >确认修改 </el-button>
       </el-form-item>
     </el-form>
+    </el-col>
+ <el-col :span="9"><div><el-divider></el-divider></div></el-col>
+<el-col :span="3"><div><el-divider></el-divider></div></el-col>
+    </el-row>
+    
   </div>
 </template>
 
 <script>
-import { username,register } from "../api/api";
+import { getmyuser,register,infomodify } from "../api/api";
 export default {
   name: "register",
   data() {
@@ -75,18 +77,19 @@ export default {
       }
     };
     return {
+      myuser:"",
+      groupable:true,
       registerUser: {
-        username: "",
+        id:"",
+        username:"",
+        birthday:"",
         credit:"",
         mobile:"",
         name: "",
         email: "",
-        password: "",
-        password2: "",
         groupid: ""
       },
       isexits: "0",
-      username: "",
       group: [
         { value: "1", label: "行政部" },
         { value: "2", label: "人事部" },
@@ -97,11 +100,6 @@ export default {
         { value: "7", label: "其他" }
       ],
       rules: {
-        name: [
-          { required: true, message: "用户名不能为空", trigger: "change" },
-          { min: 2, max: 30, message: "长度在 2 到 30 个字符", trigger: "blur" },
-          { validator: validatePass3, trigger: "blur" }
-        ],
         email: [
           {
             type: "email",
@@ -110,65 +108,56 @@ export default {
             trigger: "blur"
           }
         ],
-        mobile: [
+        credit: [
+          {
+            required: true,
+            message: "身份证格式不正确",
+            trigger: "blur"
+          },
+          { min: 18, max: 18, message: "长度为18", trigger: "blur" }
+        ],
+         mobile: [
           {
             required: true,
             message: "手机号格式不正确",
             trigger: "blur"
-          }
+          },{ min: 6, max: 20, message: "长度不正确", trigger: "blur" }
         ],
-        password: [
-          { required: true, message: "密码不能为空", trigger: "blur" },
-          { min: 6, max: 30, message: "长度在 6 到 30 个字符", trigger: "blur" }
-        ],
-        password2: [
-          { required: true, message: "确认密码不能为空", trigger: "blur" },
-          {
-            min: 6,
-            max: 30,
-            message: "长度在 6 到 30 个字符",
-            trigger: "blur"
-          },
-          { validator: validatePass2, trigger: "blur" }
-        ]
       }
-    };
+    }
+    
+  },
+  created() {
+    this.userinfo();
   },
   methods: {
-    submitForm() {
-          register(this.registerUser.registerUser)
-            .then(res => {
-              // 注册成功
-              this.$message({
-                message: res.data,
-                type: "success"
-              });
-              this.$router.push("/infoShow");
-            }).catch(function(error)
-            {
-               this.$message({
-                message: error,
-                type: "error"
-              });
-            });
-         
-    },
-    validateisexits() {
-      username(this.registerUser.username)
-        .then(response => {
-          if(response.data.isexits==0){ 
-            this.isexits = 0;//不存在则为0 ，为0可以注册
-          }     
-          else if((response.data.isexits==1)){
-            this.isexits = 1; //存在为1,不能注册
-          }
-          console.log(response.data.isexits); 
+    userinfo(){
+      console.log(this.groupable);
+      this.myuser = this.$route.query.username;
+      this.groupable= this.$route.query.groupable;
+         getmyuser(this.myuser).then(response => {
+          this.registerUser = response.data.info;
+          console.log(this.registerUser);
         })
         .catch(function(error) {
           console.log(error);
         });
-    }
-  }
+      },
+      ClickModify(){
+    infomodify(this.registerUser).then(response => {
+      console.log(this.registerUser);
+          if( response.data.code==1){
+            alter("修改成功！");
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      }
+  },
+  
+
+  
 };
 </script>
 

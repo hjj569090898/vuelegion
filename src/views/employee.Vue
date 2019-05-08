@@ -29,7 +29,7 @@
         <template slot-scope="scope">
           <el-button @click="ClickList(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button>
           <el-button
-            @click="ClickUpdate(scope.row)"
+            @click="routerto(scope.row)"
             type="text"
             size="medium"
             icon="el-icon-edit-outline"
@@ -106,6 +106,10 @@ export default {
           this.$router.push("/register")
      },
 
+    routerto(row){
+      console.log(row.username);
+           this.$router.push({path:'/infomodify',query:{username:row.username,groupable:false}});
+    },
     }
 }
 </script>

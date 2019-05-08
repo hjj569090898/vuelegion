@@ -4,10 +4,12 @@
   
  
  <el-tabs :tab-position="tabPosition">
+
     <el-tab-pane label="个人信息">
 
-      <el-row :gutter="20">
-         <el-col :span="16"><div>
+      <el-row>
+        <el-col :span="4"><el-divider content-position="left">&nbsp;</el-divider></el-col>
+         <el-col :span="8"><div>
            <el-divider content-position="left">用户信息</el-divider>
       <el-form :model="userinfo" label-width="70px">
         <el-form-item label="用户编号">
@@ -41,12 +43,14 @@
       </el-form>
       </div></el-col>
        <el-col :span="8"><div><el-divider content-position="left">头像</el-divider></div></el-col>
+       <el-col :span="4"><el-divider content-position="left">&nbsp;</el-divider></el-col>
 </el-row>
       
   </el-tab-pane>
     <el-tab-pane label="权限信息">权限信息
-    <el-row :gutter="20">
-         <el-col :span="10"><div>
+    <el-row>
+      <el-col :span="3"><el-divider content-position="left">&nbsp;</el-divider></el-col>
+         <el-col :span="9"><div>
            <el-divider content-position="left">用户个人权限</el-divider>
            <el-table
     :data="userpermission"
@@ -70,7 +74,7 @@
   </el-table>
 
            </div></el-col>
-         <el-col :span="10"><div>
+         <el-col :span="9"><div>
            <el-divider content-position="left">所在部门权限</el-divider>
            <el-table
     :data="groupmission"
@@ -93,6 +97,7 @@
     </el-table-column>
            </el-table>
            </div></el-col>
+           <el-col :span="3"><el-divider content-position="left">&nbsp;</el-divider></el-col>
     </el-row>
     </el-tab-pane>
 
@@ -124,7 +129,7 @@ export default {
   },
   methods: {
       infoModify(){
-              this.$router.push("/infomodify");
+             this.$router.push({path:'/infomodify',query:{username:localStorage.getItem("User"),groupable:true}});
       },
       backtoindex(){
         this.$router.push("/infomodify");

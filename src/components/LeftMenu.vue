@@ -74,8 +74,7 @@ export default {
           name: "个人中心",
           path: "info",
           children: [{ path: "infoshow", name: "  个人信息" },
-          { path: "infoModify", name: "  信息修改" },
-          { path: "infoshow6", name: "  考勤及薪资1" }]
+          { path: "infoshow6", name: "  账单信息" }]
         },
          
          {

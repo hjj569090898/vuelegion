@@ -2,14 +2,14 @@
   <div>
     <el-input
       :placeholder="tip"
-      v-model="search.id"
+      v-model="searchid"
       style="width: 280px;"
       class="filter-item"
       prefix-icon="el-icon-search"
       @keyup.enter.native="SeachClick()"
     />
 
-    <el-select v-model="search.type" placeholder="全部" style="width: 200px" @change="SeachClick()">
+    <el-select v-model="searchtype" placeholder="全部" style="width: 200px" @change="getInfo">
       <el-option v-for="item in Selects" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
   <el-button type="success" @click="SeachClick()">查询</el-button>
@@ -77,6 +77,8 @@ export default {
         type: "",
         id: ""
       },
+      searchid:"",
+      searchtype:"",
       PageInfo: 1,
 
       currentPage: []
@@ -87,16 +89,14 @@ export default {
   },
 
   created() {
-    this.getUserInfo();
+    this.getInfo();
   },
   watch: {},
   computed: {},
   methods: {
-    getUserInfo() {
-      //请求用户信息
+    getInfo() {
       this.currentPage = 1;
-      this.search.type = "";
-      getFinance(this.search.type, this.currentPage)
+      getFinance(this.searchtype, this.currentPage)
         .then(response => {
           this.Finances = response.data.Fiance;
           this.PageInfo = response.data.length;
@@ -110,12 +110,15 @@ export default {
     },
     SeachClick() {
       //查询
-      if(this.search.id==null)
+      if(this.searchid=="")
       {
         this.currentPage = 1;
-      this.search.type = "";
-      getFinance(this.search.type, this.currentPage)
+      this.searchtype = "";
+      getFinance(this.searchtype, this.currentPage)
         .then(response => {
+          if(response==""){
+            this.Finances = "";
+          }
           this.Finances = response.data.Fiance;
           this.PageInfo = response.data.length;
         })
@@ -124,7 +127,7 @@ export default {
         });
       }
       else{
-      searchFinance(this.search.id)
+      searchFinance(this.searchid)
         .then(response => {
           this.Finances = response.data;
         })

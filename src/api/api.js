@@ -23,6 +23,10 @@ export const login = params => {
 export const getuserInfo = params =>{
   return axios.get(`${host}/userinfo/`, params)
 }
+//修改个人信息
+export const infomodify = params =>{
+  return axios.patch(`${host}/updateinfo/`, params)
+}
 
 //判断用户是否存在
 export const username = params =>{
@@ -71,7 +75,7 @@ export const getFinance =  (params,params2) =>{return axios.get(`${host}/finance
 export const searchFinance =  (params) =>{return axios.get(`${host}/finance/`+`${params}`)}
 
 //获得所有职员信息分组
-export const UserBygroupid = (params,params2) =>{return axios.get(`${host}/getuserbyg/?groupid=${params}`+`&page=${params2}`)}
+export const UserBygroupid = (params,params2) =>{return axios.get(`${host}/getuserbyg?groupid=${params}`+`&page=${params2}`)}
 
 //获得所有职员信息
 export const getAllUser = params =>{return axios.get(`${host}/getuser/?page=${params}`)}
@@ -83,3 +87,9 @@ export const queryauditing = params =>{return axios.get(`${host}/auditing/`+`${p
 //审核
 export const auditi = (params,params2,params3,params4,params5) =>
 {return axios.patch(`${host}/auditing/?id=${params}`+`&state=${params2}`+`&admin=${params3}`+`&adate=${params4}`+`&advice=${params5}`)}
+
+//项目
+export const  listProgress = (params,params2) =>{return axios.get(`${host}/progress?projectid=${params}`+`&page=${params2}`)}
+
+//
+export const uploadimage = (params,params2) =>{return axios.post(`${host}/upload/?id=${params}`, params2)}

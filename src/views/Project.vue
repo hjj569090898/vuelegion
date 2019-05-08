@@ -17,11 +17,14 @@
   
     <el-input
       :placeholder="tip"
+      v-model="nowid"
       style="width: 280px; text-align: right;"
       class="filter-item"
       prefix-icon="el-icon-search"
+        @keyup.enter.native="SeachClick"
     />
-    <el-button type="success" @click="ClickInsert()">查询</el-button>
+    
+    <el-button type="success" @click="SeachClick">查询</el-button>
     <!-- @keyup.enter.native="SeachClick(Search.id)"  -->
 
     <el-table :data="Project"  
@@ -170,6 +173,7 @@ export default {
           id:"123",
           PageInfo:1,
       currentPage: 1,
+      nowid:"",
       dialogTableVisible:false,
       InsertFormVisible:false,
       InsertForm:{
@@ -179,7 +183,8 @@ export default {
         planend:"",
         leader:"",
         ctid:"",
-        pnow:""
+        pnow:"",
+        
       }
     };
   },
@@ -202,8 +207,8 @@ export default {
       },
       getList(){
         ListProject(1).then(response => {
-          this.Project = response.data.Project;
-          this.PageInfo = response.data.page;
+          this.Project = response.data.progress;
+          this.PageInfo = response.data.length;
           // this.PageInfo = response.data;
         })
         .catch(function(error) {
@@ -241,6 +246,9 @@ export default {
       }).catch(function(error){
         console.log(error);
       });
+    },
+    SeachClick(){
+
     },
     drawLine() {
       // 基于准备好的dom，初始化echarts实例
