@@ -73,6 +73,7 @@
     <div style="text-align: right;"> 
      <el-button type="primary" @click="routerto()">查看工程任务详情</el-button> </div>
 <div id="myChart" :style="{width: '300px', height: '300px'}"></div>
+<div id="myChartline" :style="{width: '300px', height: '300px'}" ></div>
 </el-dialog>
 
 <el-dialog title="项目立项" :visible.sync="InsertFormVisible" :close-on-click-modal="true">
@@ -148,6 +149,8 @@ require('echarts/lib/chart/bar')
 // 引入提示框和title组件
 require('echarts/lib/component/tooltip')
 require('echarts/lib/component/title')
+require('echarts/lib/component/legend')
+require('echarts/lib/chart/line')
 import { ListProject,
           AddProject,
           QueryProject
@@ -161,6 +164,8 @@ export default {
     return {
       tip: "请输入项目关键词",
       aproject:"",
+      xdata:[1,2,3],
+      ydata:[10,10,100],
       stateselect:[{
         value:"正常",
         label:"正常"
@@ -185,7 +190,57 @@ export default {
         ctid:"",
         pnow:"",
         
-      }
+      },
+      option: {
+ legend: {
+  data: ['招商银行', '浦发银行', '广发银行', '上海银行']
+},
+xAxis: {
+  type: 'category',   // 还有其他的type，可以去官网喵两眼哦
+  data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],   // x轴数据
+  name: '日期',   // x轴名称
+  // x轴名称样式
+  nameTextStyle: {
+    fontWeight: 600,
+    fontSize: 18
+  }
+},
+yAxis: {
+  type: 'value',
+  name: '纵轴名称',   // y轴名称
+  // y轴名称样式
+  nameTextStyle: {
+    fontWeight: 600,
+    fontSize: 18
+  }
+},tooltip: {
+  trigger: 'axis'   // axis   item   none三个值
+},
+series: [
+  {
+    name: '招商银行',
+    data: [820, 932, 901, 934, 1290, 1330, 1320],
+    type: 'line'
+  },
+  {
+    name: '浦发银行',
+    data: [620, 711, 823, 934, 1445, 1456, 1178],
+    type: 'line'
+  },
+  {
+    name: '广发银行',
+    data: [612, 920, 1140, 1160, 1190, 1234, 1321],
+    type: 'line'
+  },
+  {
+    name: '上海银行',
+    data: [234, 320, 453, 567, 789, 999, 1200],
+    type: 'line'
+  }
+],
+},
+
+
     };
   },
     created() {
@@ -254,20 +309,28 @@ export default {
       // 基于准备好的dom，初始化echarts实例
       let myChart = echarts.init(document.getElementById('myChart'))
       // 绘制图表
+
+      let myChartline = echarts.init(document.getElementById('myChartline'))
+        myChartline.setOption(this.option)
+
+
+        
       myChart.setOption({
         title: { text: 'ECharts 入门示例' },
         tooltip: {},
         xAxis: {
-          data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+          data: this.xdata
         },
         yAxis: {},
         series: [{
-          name: '销量',
+          name: '期望值',
           type: 'bar',
-          data: [5, 20, 36, 110, 10, 20]
+          data: this.ydata
         }]
+        
       });
-    }
+    },
+
   }
 };
 </script> 

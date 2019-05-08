@@ -147,7 +147,9 @@ export default {
     infomodify(this.registerUser).then(response => {
       console.log(this.registerUser);
           if( response.data.code==1){
-            alter("修改成功！");
+            alert("修改成功！");
+            this.$router.push("/infoshow");
+
           }
         })
         .catch(function(error) {

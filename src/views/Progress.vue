@@ -18,7 +18,7 @@
 <el-table-column prop="actualstart" label="实际开始时间" width="130"></el-table-column>
 <el-table-column prop="actualend" label="实际结束时间" width="130"></el-table-column>
 <el-table-column prop="plancost" label="计划花费" width="110"></el-table-column>
-<el-table-column prop="actulacost" label="当前/实际花费" width="110"></el-table-column>
+<el-table-column prop="actualcost" label="当前/实际花费" width="110"></el-table-column>
 <el-table-column prop="subcontractcost" label="分包费用" width="110"></el-table-column>
 <el-table-column prop="state" label="状态" width="110"></el-table-column>
  <el-table-column label="操作" width="140">
