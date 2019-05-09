@@ -69,12 +69,109 @@
         <!-- data="tableData.slice((currentPage-1)pagesize,currentPagepagesize)"； -->
       </el-pagination>
 
-<el-dialog title= 123 :visible.sync="dialogTableVisible">
+
+
+
+
+
+<el-dialog title= "工程总览" :visible.sync="dialogTableVisible">
     <div style="text-align: right;"> 
+      <el-divider >{{nowprojectname}}</el-divider>
      <el-button type="primary" @click="routerto()">查看工程任务详情</el-button> </div>
-<div id="myChart" :style="{width: '300px', height: '300px'}"></div>
-<div id="myChartline" :style="{width: '300px', height: '300px'}" ></div>
+     <el-divider content-position="left">当前进度</el-divider>
+     <el-progress :text-inside="true" :stroke-width="18" :percentage= nowpercent>当前进度</el-progress>
+<el-divider content-position="left"></el-divider>
+<div>项目共有任务数量 :{{progressnum}}</div>
+<div>计划花费 ：{{plancost}}    当前花费 ：{{accoust}}</div>
+<div>额外费用{{subcost}}</div>
+<div>计划人工用时 ：{{planwork}} 当前人工用时 ：{{acwork}}</div>
+<div>计划维修时长 ：{{planday}}  当前已用时长 ：{{acday}}</div>
+<div>开工延迟时间:{{delaystart}} 完工延迟时间：{{delayend}}</div>
+<div id="myChartline" :style="{width: '500px', height: '500px'}" ></div>
 </el-dialog>
+
+
+
+
+<el-dialog title="项目编辑" :visible.sync="UpdateFormVisible" :close-on-click-modal="true">
+      <el-form :model="UpdateForm" label-width="80px">
+      <el-form-item label="工程名称">
+          <el-input v-model="UpdateForm.pjname"></el-input>
+      </el-form-item>
+<el-form-item label="工程状态">
+<el-select  v-model="UpdateForm.state" placeholder="工程状态">
+    <el-option
+   v-for="item in stateselect"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select> 
+</el-form-item> 
+
+        <el-form-item label="计划开始">
+          <el-date-picker
+      v-model="UpdateForm.planstart"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="选择计划开工时间">
+    </el-date-picker>
+        </el-form-item>
+        <el-form-item label="计划完工">
+         <el-date-picker
+      v-model="UpdateForm.planend"
+      
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="选择计划完工时间">
+    </el-date-picker>
+        </el-form-item>
+
+  <el-form-item label="实际开始">
+          <el-date-picker
+      v-model="UpdateForm.actualstart"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="实际开工时间(可不填)">
+    </el-date-picker>
+        </el-form-item>
+
+          <el-form-item label="实际完工">
+          <el-date-picker
+      v-model="UpdateForm.actualend"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="实际完工时间(可不填)">
+    </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="负责人">
+          <el-input  v-model="UpdateForm.leader"></el-input>
+        </el-form-item>
+         <el-form-item label="合同编号">
+          <el-input v-model="UpdateForm.ctid"></el-input>
+        </el-form-item>
+        <el-form-item label="工程阶段">
+         <el-select  v-model="UpdateForm.pnow"  placeholder="工程阶段">
+    <el-option
+   v-for="item in pnowselect"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select>  
+        </el-form-item>
+        
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click=" UpdateFormVisible= false">取 消</el-button>
+        <el-button type="primary" @click="handleUpdate">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
 
 <el-dialog title="项目立项" :visible.sync="InsertFormVisible" :close-on-click-modal="true">
       <el-form :model="InsertForm" label-width="80px">
@@ -112,6 +209,25 @@
       placeholder="选择计划完工时间">
     </el-date-picker>
         </el-form-item>
+
+  <el-form-item label="实际开始">
+          <el-date-picker
+      v-model="InsertForm.actualstart"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="实际开工时间(可不填)">
+    </el-date-picker>
+        </el-form-item>
+
+          <el-form-item label="实际完工">
+          <el-date-picker
+      v-model="InsertForm.actualend"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="实际完工时间(可不填)">
+    </el-date-picker>
+        </el-form-item>
+
         <el-form-item label="负责人">
           <el-input  v-model="InsertForm.leader"></el-input>
         </el-form-item>
@@ -153,7 +269,9 @@ require('echarts/lib/component/legend')
 require('echarts/lib/chart/line')
 import { ListProject,
           AddProject,
-          QueryProject
+          QueryProject,
+          projectcount,
+          updateproject
     } from "../api/api";
 import { truncate } from 'fs';
 import router from '../router/index'
@@ -162,10 +280,23 @@ export default {
   name:'Project',
   data() {
     return {
-      tip: "请输入项目关键词",
+      tip: "请输入项目名",
       aproject:"",
       xdata:[1,2,3],
       ydata:[10,10,100],
+      nowpercent:0,
+          delaystart : 0,
+          delayend : 0,
+          accoust : 0,
+          plancost : 0,
+          acwork : 0,
+          planwork : 0,
+          progressnum : 0, 
+          planday:0,
+          acday:0,
+          subcost:0,
+          nowprojectname:"",
+          UpdateFormVisible:false,
       stateselect:[{
         value:"正常",
         label:"正常"
@@ -186,19 +317,33 @@ export default {
         state:"",
         planstart:"",
         planend:"",
+        actualstart:"",
+        actualend:"",
         leader:"",
         ctid:"",
-        pnow:"",
-        
+        pnow:"",     
       },
-      option: {
+       UpdateForm:{
+        id:"",
+        pjname:"",
+        state:"",
+        planstart:"",
+        planend:"",
+        actualstart:"",
+        actualend:"",
+        leader:"",
+        ctid:"",
+        pnow:"",     
+      },
+
+       option: {
  legend: {
-  data: ['招商银行', '浦发银行', '广发银行', '上海银行']
+  data: ['计划给予', '当前进度计划', '当前消耗']
 },
 xAxis: {
   type: 'category',   // 还有其他的type，可以去官网喵两眼哦
-  data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],   // x轴数据
-  name: '日期',   // x轴名称
+  data: ['时长(天)', '花费(万)', '人工(人/天)'],   // x轴数据
+  name: '资源类型',   // x轴名称
   // x轴名称样式
   nameTextStyle: {
     fontWeight: 600,
@@ -207,7 +352,7 @@ xAxis: {
 },
 yAxis: {
   type: 'value',
-  name: '纵轴名称',   // y轴名称
+  name: '消耗值',   // y轴名称
   // y轴名称样式
   nameTextStyle: {
     fontWeight: 600,
@@ -218,27 +363,23 @@ yAxis: {
 },
 series: [
   {
-    name: '招商银行',
-    data: [820, 932, 901, 934, 1290, 1330, 1320],
+    name: '计划给予',
+    data: [],
     type: 'line'
   },
   {
-    name: '浦发银行',
-    data: [620, 711, 823, 934, 1445, 1456, 1178],
+    name: '当前进度计划',
+    data: [],
     type: 'line'
   },
   {
-    name: '广发银行',
-    data: [612, 920, 1140, 1160, 1190, 1234, 1321],
-    type: 'line'
-  },
-  {
-    name: '上海银行',
-    data: [234, 320, 453, 567, 789, 999, 1200],
+    name: '当前消耗',
+    data: [],
     type: 'line'
   }
 ],
 },
+      
 
 
     };
@@ -251,15 +392,17 @@ series: [
   },
   methods: {
       handdle(row){
-        console.log(row.leader);
-        this.dialogTableVisible = true;
+         this.aproject = row.id;
+         
+         this.nowprojectname = row.pjname;
+       this.dialogTableVisible = true;
          this.$nextTick(() => {
-      //  执行echarts方法
-        this.drawLine()
+   this.drawLine()
+   
       })
-        this.aproject = row.id;
-
+        this.dialogTableVisible = true;
       },
+    
       getList(){
         ListProject(1).then(response => {
           this.Project = response.data.progress;
@@ -296,8 +439,8 @@ series: [
       console.log(this.InsertForm);
       AddProject(this.InsertForm).then(response=>{
         this.InsertFormVisible = false;
-        console.log(InsertForm);
-        console.log("添加成功");
+      alert("项目添加成功!");
+       this.getList();
       }).catch(function(error){
         console.log(error);
       });
@@ -305,30 +448,52 @@ series: [
     SeachClick(){
 
     },
+    ClickUpdate(row){
+      this.UpdateFormVisible = true;
+      this.UpdateForm = Object.assign({}, row);
+    },
+    handleUpdate(){
+      this.dialogTableVisible=false;
+      this.UpdateForm.id = this.aproject
+      updateproject(this.UpdateForm).then(response=>{
+        this.UpdateFormVisible = false;
+      alert("项目修改成功!");
+       this.getList();
+      }).catch(function(error){
+        console.log(error);
+      });
+    },
     drawLine() {
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = echarts.init(document.getElementById('myChart'))
-      // 绘制图表
 
+        projectcount(this.aproject) .then(response => {
+          this.option.series[0].data = response.data.all;
+          this.option.series[1].data = response.data.plan;
+          this.option.series[2].data =response.data.now;
+          this.nowpercent =response.data.percent;
+          this.delaystart = response.data.delaystart;
+          this.delayend = response.data.delayend;
+          this.accoust = response.data.accoust;
+          this.plancost = response.data.plancost;
+          this.acwork = response.data.acwork;
+          this.planwork = response.data.planwork;
+          this.progressnum = response.data.progressnum; 
+          this.planday = response.data.pday;
+          this.acday =response.data.aday;
+          this.subcost =response.data.subcost;
+          console.log(response.data);
+          //请求正确时执行的代码
+        })
+        .catch(function(response) {
+          console.log(response); //发生错误时执行的代码
+        });
+
+     
       let myChartline = echarts.init(document.getElementById('myChartline'))
         myChartline.setOption(this.option)
 
 
         
-      myChart.setOption({
-        title: { text: 'ECharts 入门示例' },
-        tooltip: {},
-        xAxis: {
-          data: this.xdata
-        },
-        yAxis: {},
-        series: [{
-          name: '期望值',
-          type: 'bar',
-          data: this.ydata
-        }]
-        
-      });
+     
     },
 
   }

@@ -42,7 +42,15 @@
       
       </el-form>
       </div></el-col>
-       <el-col :span="8"><div><el-divider content-position="left">头像</el-divider></div></el-col>
+       <el-col :span="8"><div>
+         <el-divider content-position="left">头像</el-divider>
+<div class="demo-image__placeholder">
+<div class="block">
+    <span class="demonstration">默认</span>
+    <el-image :src="src"></el-image>
+  </div>
+</div>
+         </div></el-col>
        <el-col :span="4"><el-divider content-position="left">&nbsp;</el-divider></el-col>
 </el-row>
       
@@ -121,6 +129,7 @@ export default {
         groupmission:[],
         userinfo:{},
         myuser:"",
+        src:"",
       };
     },
     created() {
@@ -131,11 +140,18 @@ export default {
       infoModify(){
              this.$router.push({path:'/infomodify',query:{username:localStorage.getItem("User"),groupable:true}});
       },
+      
       backtoindex(){
         this.$router.push("/infomodify");
       },
       getList(){
         this.myuser = localStorage.getItem("User");
+
+        // this.src ="../assets/"+this.myuser+".jpg";
+
+        this.src ="https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
+
+        // this.src ="../assets/logo.png"
         getmyuser(this.myuser).then(response => {
           this.userinfo = response.data.info;
         })
@@ -143,6 +159,7 @@ export default {
           console.log(error);
         });
       },
+      
       getpermissiontable(){
       getpermission(localStorage.getItem("User")).then(response => {
           this.userpermission = response.data.permission;

@@ -48,7 +48,7 @@ export default {
           badge:"",
           children: [{ path: "Finance", name: "  资金流水" },
           {path:"auditing", name:"  资金申用审核"},
-          {path:"payroll", name:"  工资发放1"},
+          // {path:"payroll", name:"  工资发放1"},
           
           ]
         },
@@ -56,8 +56,9 @@ export default {
           icon: "el-le-iconxiangmushenhe",
           name: "项目管理",
           path: "fund1",
-          children: [{ path: "Project", name: "  工程管理" },
-          { path: "Progress", name: "  计划管理1" }]
+          children: [{ path: "Project", name: "  项目工程" },
+          { path: "Project", name: "  项目合同" }
+          ]
         },
         {
           icon: "el-le-iconcangchu",
@@ -74,7 +75,8 @@ export default {
           name: "个人中心",
           path: "info",
           children: [{ path: "infoshow", name: "  个人信息" },
-          { path: "infoshow6", name: "  账单信息" }]
+          // { path: "infoshow6", name: "  账单信息" }
+          ]
         },
          
          {
@@ -82,7 +84,7 @@ export default {
           name: "人事管理",
           path: "register",
           children: [{ path: "employee", name: "人员管理" },
-          { path: "infoshow8", name: "  考勤管理1" }
+          // { path: "infoshow8", name: "  考勤管理1" }
         
           
           ]

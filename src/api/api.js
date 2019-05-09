@@ -64,7 +64,7 @@ export const AddStockOut = params => {return axios.post(`${host}/stockout/`), pa
 //查看工程
 export const ListProject = params => {return axios.get(`${host}/project/?page=${params}`)}
 //工程立项
-export const AddProject = params =>{return axios.post(`${host}/project/`), params};
+export const AddProject = params =>{return axios.post(`${host}/project/`, params)};
 
 //查询工程
 export const QueryProject = params => {return axios.get(`${host}/project/`+`${params}/`)}
@@ -91,5 +91,17 @@ export const auditi = (params,params2,params3,params4,params5) =>
 //项目
 export const  listProgress = (params,params2) =>{return axios.get(`${host}/progress?projectid=${params}`+`&page=${params2}`)}
 
-//
+//图片
 export const uploadimage = (params,params2) =>{return axios.post(`${host}/upload/?id=${params}`, params2)}
+
+//项目统计信息
+export const projectcount = params =>{return axios.get(`${host}/projectcount/${params}`)}
+
+
+//修改项目
+export const updateproject = (params2) =>{return axios.patch(`${host}/project/`,params2)}
+//添加任务
+export const AddProgress = params =>{return axios.post(`${host}/progress/`, params)};
+
+//工程物品清单
+export const listpjGoods = (params,params2) =>{return axios.get(`${host}/projectgoods/?projectid=${params}`+`&page=${params2}`)}
