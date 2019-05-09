@@ -48,6 +48,7 @@
 <div class="block">
     <span class="demonstration">默认</span>
     <el-image :src="src"></el-image>
+
   </div>
 </div>
          </div></el-col>
@@ -147,9 +148,9 @@ export default {
       getList(){
         this.myuser = localStorage.getItem("User");
 
-        // this.src ="../assets/"+this.myuser+".jpg";
+        this.src = require('../assets/'+this.myuser+'.jpg')//"../assets/"+this.myuser+".jpg";
 
-        this.src ="https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
+        // this.src ="https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg"
 
         // this.src ="../assets/logo.png"
         getmyuser(this.myuser).then(response => {

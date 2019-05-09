@@ -8,7 +8,7 @@
       <el-col :span="6" class="user">
         <div class="userinfo">
 
-          <img src="../assets/avatar.jpg" class ="avatar">
+          <img :src="imagesrc" class ="avatar">
           <div class="welcome">
             <p class="name comename">欢迎您</p>
             <p class="name avatarname">{{username}}</p>
@@ -38,7 +38,8 @@ export default {
   data() {
     return {
      username : "",
-     avatar:""
+     avatar:"",
+     imagesrc:"",
     };
   },
   computed: {
@@ -48,7 +49,8 @@ export default {
   },
   created() {
     // this.UserInfo();
-    this.username = localStorage.getItem("User")
+    this.username = localStorage.getItem("User");
+    this.imagesrc = require('../assets/'+localStorage.getItem("User")+'.jpg');
   },
   methods: {
     setDialogInfo(cmditem) {

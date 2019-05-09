@@ -273,16 +273,18 @@
 
 
 <el-dialog title="添加图片" :visible.sync="addimageFormVisible" :close-on-click-modal="true">
-     <el-upload
-      action="http://127.0.0.1:8083/upload/"
-      list-type="picture-card"
-      :auto-upload="false"
-      :on-change="OnChange"
-      :on-remove="OnRemove"
-      :on-preview="handlePictureCardPreview"
-      >
-      <i class="el-icon-plus"></i>
-    </el-upload>
+    
+    <el-upload
+  class="upload-demo"
+  :action="imageurl"
+  :on-preview="handlePreview"
+  :on-remove="handleRemove"
+  :file-list="fileList"
+  list-type="picture">
+  <el-button size="small" type="primary">点击上传</el-button>
+  <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+</el-upload>
+
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
@@ -313,12 +315,14 @@ export default {
       },{value:"施工中",label:"施工中"},{value:"已完工",label:"已完工"},{value:"其他",label:"其他"}],
         param: new FormData(),
             projectid:"",
+            fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+      ,
             Project:[],
             Pjgoods:[],
             Progress:[],
              activeNames: ['1'],
              currentPage:1,
-             
+             imageurl:"http://localhost:8083/upload/"+this.$route.query.projectid,
               fileList:[],
               
         dialogImageUrl:'',
@@ -328,7 +332,7 @@ export default {
              UpdateFormVisible:false,
              ViewFormVisible:false,
              InsertFormVisible:false,
-             addimageFormVisible:false,
+             addimageFormVisible:true,
              dialogVisible:false,
              ImageFormVisible:false,
              UpdateForm:{
@@ -463,6 +467,12 @@ export default {
             console.log(res);
             alert(res);
           })
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
       }
   }
 }
