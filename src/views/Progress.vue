@@ -1,6 +1,6 @@
 <template>
 <div>
-    <el-divider content-position="left">{{Project.pjname}}</el-divider>
+
 
       <el-collapse v-model="activeNames" @change="handleChange">
   <el-collapse-item title= "工程内容(点击查看)" name="1">

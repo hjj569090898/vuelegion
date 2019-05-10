@@ -57,7 +57,7 @@ export default {
           name: "项目管理",
           path: "fund1",
           children: [{ path: "Project", name: "  项目工程" },
-          { path: "Project", name: "  项目合同" }
+          { path: "contract", name: "  项目合同" }
           ]
         },
         {
@@ -75,7 +75,7 @@ export default {
           name: "个人中心",
           path: "info",
           children: [{ path: "infoshow", name: "  个人信息" },
-          // { path: "infoshow6", name: "  账单信息" }
+          { path: "userapply", name: "  报销申请" }
           ]
         },
          

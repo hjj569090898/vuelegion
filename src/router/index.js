@@ -17,6 +17,9 @@ import auditing from '../views/auditing'
 import payroll from '../views/payroll'
 import Finance from  '../views/Finance'
 import employee from '../views/employee'
+import userapply from '../views/userapply'
+import imageshow from '../views/imageshow'
+import contract from '../views/contract'
 
 
 Vue.use(Router)
@@ -48,7 +51,9 @@ const router = new Router({
         { path: '/Finance', name: 'Finance', component: Finance },
         { path: '/employee', name: 'employee', component: employee },
         { path: '/Progress', name: 'Progress', component: Progress },
-
+        { path: '/userapply', name: 'userapply', component: userapply },
+        { path: '/imageshow', name: 'imageshow', component: imageshow },
+        { path: '/contract', name: 'contract', component: contract },
       ]
     },
 

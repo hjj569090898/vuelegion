@@ -8,6 +8,8 @@ import '../src/axios/'
 import store from './store/store'
 import VueI18n from 'vue-i18n'
 import echarts from 'echarts'
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
 Vue.prototype.$echarts = echarts
 import './assets/icon/iconfont.css'
 Vue.use(VueI18n) // 通过插件的形式挂载
@@ -18,7 +20,11 @@ Vue.use(ElementUI)
 Vue.prototype.$http = Axios
 Vue.config.productionTip = false
 
-
+Vue.use(Viewer, {
+  defaultOptions: {
+      zIndex: 9999
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

@@ -28,10 +28,18 @@ export const infomodify = params =>{
   return axios.patch(`${host}/updateinfo/`, params)
 }
 
+//申请财务列表
+export const Userapplylist = params =>{
+  return axios.get(`${host}/userapply/?username=${params}`)
+}
+export const adduserapply = params =>{
+  return axios.post(`${host}/userapply/`,params)
+}
 //判断用户是否存在
 export const username = params =>{
   return axios.get(`${host}/username/?username=${params}`)
 }
+//根据用户名得到信息
 export const getmyuser  = params =>{
   return axios.get(`${host}/userinfobyname/?username=${params}`)
 }

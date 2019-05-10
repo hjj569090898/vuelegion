@@ -110,8 +110,11 @@
     </el-row>
     </el-tab-pane>
 
-    <el-tab-pane label="考勤信息">角色管理</el-tab-pane>
-    <el-tab-pane label="其他">定时任务补偿</el-tab-pane>
+    <el-tab-pane label="报销申请">
+
+
+    </el-tab-pane>
+   
   </el-tabs>
  
 </div>
