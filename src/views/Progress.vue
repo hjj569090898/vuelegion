@@ -1,67 +1,8 @@
 <template>
 <div>
-
-
-      <el-collapse v-model="activeNames" @change="handleChange">
-  <el-collapse-item title= "工程内容(点击查看)" name="1">
-  
-  </el-collapse-item>
-  <el-collapse-item title= "物资统计(点击查看)" name="2">
-
- <el-table :data="Pjgoods"  
-    border style="width: 100%">
-<el-table-column prop="id" label="编号" width="160"></el-table-column>
-<el-table-column prop="goodsid" label="物品编号" width="130"></el-table-column>
-<el-table-column prop="goodsname" label="物品名称" width="130"></el-table-column>
-<el-table-column prop="plannum" label="计划数量" width="130"></el-table-column>
-<el-table-column prop="actualnum" label="当前数量" width="130"></el-table-column>
-<el-table-column prop="date" label="变更时间" width="110"></el-table-column>
-    </el-table>
-    <div class="block">
-      <span class="demonstration"></span>
-      <el-pagination
-        background
-        @current-change="handleCurrentChange"
-        :current-page="goodscurrentPage"
-        layout="total, prev, pager, next"
-        :total="PageInfo"
-      >
-        <!-- data="tableData.slice((currentPage-1)pagesize,currentPagepagesize)"； -->
-      </el-pagination>
-    </div>
-
-<!-- <el-form :model="Insertpjgoods" ref="Insertpjgoods" label-width="100px" class="demo-dynamic">
-  <el-form-item
-    prop="email"
-    label="邮箱"
-    :rules="[
-      { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-      { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
-    ]"
-  >
-    <el-input v-model="dynamicValidateForm.email"></el-input>
-  </el-form-item>
-  <el-form-item
-    v-for="(domain, index) in dynamicValidateForm.domains"
-    :label="'域名' + index"
-    :key="domain.key"
-    :prop="'domains.' + index + '.value'"
-    :rules="{
-      required: true, message: '域名不能为空', trigger: 'blur'
-    }"
-  >
-    <el-input v-model="domain.value"></el-input><el-button @click.prevent="removeDomain(domain)">删除</el-button>
-  </el-form-item>
-  <el-form-item>
-    <el-button type="primary" @click="submitForm('dynamicValidateForm')">提交</el-button>
-    <el-button @click="addDomain">新增域名</el-button>
-    <el-button @click="resetForm('dynamicValidateForm')">重置</el-button>
-  </el-form-item>
-</el-form> -->
-
-  </el-collapse-item>
-   <el-collapse-item title= "任务清单(点击查看)" name="3">
-      <el-button
+    <el-tabs :tab-position="tabPosition">
+      <el-tab-pane label="任务清单">
+       <el-button
       type="primary"
             icon="el-icon-edit-outline"
              @click="ClickInsert"
@@ -106,8 +47,103 @@
         <!-- data="tableData.slice((currentPage-1)pagesize,currentPagepagesize)"； -->
       </el-pagination>
     </div>
-  </el-collapse-item>  
-</el-collapse>
+      </el-tab-pane>
+
+      
+       <el-tab-pane label="物资清单">
+
+         <el-button
+          type="primary"
+            icon="el-icon-edit-outline"
+             @click="clickaddgoods"
+          >+新增物资需求</el-button>
+
+           <el-table :data="Pjgoods"  
+    border style="width: 100%">
+<el-table-column prop="id" label="编号" width="160"></el-table-column>
+<el-table-column prop="goodsid" label="物品编号" width="130"></el-table-column>
+<el-table-column prop="name" label="物品名称" width="130"></el-table-column>
+<el-table-column prop="plannum" label="计划数量" width="130"></el-table-column>
+<el-table-column prop="actualnum" label="当前数量" width="130"></el-table-column>
+<el-table-column prop="applynum" label="申请中的数量" width="170"></el-table-column>
+<el-table-column prop="date" label="变更时间" width="110"></el-table-column>
+<el-table-column label="操作" width="220">
+        <template slot-scope="scope">
+          <div v-if="scope.row.applynum==0">
+            <el-button @click="Clickadd(scope.row)" type="text" size="medium" icon="el-icon-view">继续添加</el-button>
+            </div>
+            <div v-if="scope.row.applynum!=0">
+               <el-button disabled type="text" size="medium" icon="el-icon-view">等待审核</el-button>
+            </div>
+            <div v-if="scope.row.applynum==0 && scope.row.actual!=0" >
+          <el-button
+            @click="Clickdelete(scope.row)"
+            type="text"
+            size="medium"
+            icon="el-icon-edit-outline"
+          >物料退回</el-button>
+            </div>
+          <div>
+            </div>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="block">
+      <span class="demonstration"></span>
+      <el-pagination
+        background
+        @current-change="handleCurrentChange"
+        :current-page="goodscurrentPage"
+        layout="total, prev, pager, next"
+        :total="PageInfo"
+      >
+      
+        <!-- data="tableData.slice((currentPage-1)pagesize,currentPagepagesize)"； -->
+      </el-pagination>
+    </div>
+
+       </el-tab-pane>
+
+        <el-tab-pane label="现场图集">
+           <el-button
+          type="primary"
+            icon="el-icon-edit-outline"
+             @click="clickinsertimage"
+          >+添加图片</el-button>
+          <viewer :images="images">
+	   <img v-for="src in images" :src="src" :key="src" width="300">
+	</viewer>
+       </el-tab-pane>
+
+    </el-tabs>
+
+
+<el-dialog title="申请物资补充" :visible.sync="addgoodsFormVisible" :close-on-click-modal="true">
+      <el-form  :model="addgoodsForm"  class="demo-form-inline" label-width="80px">
+
+         <el-form-item label="物品编号">
+          <el-input v-model="addgoodsForm.goodsid" disabled></el-input>
+        </el-form-item>
+
+        <el-form-item label="预计数量">
+          <el-input v-model="addgoodsForm.plannum" disabled></el-input>
+        </el-form-item>
+
+        <el-form-item label="当前已用">
+          <el-input v-model="addgoodsForm.actualnum"  disabled ></el-input>
+        </el-form-item>
+
+      <el-form-item label="现在申请">
+          <el-input-number v-model="addgoodsForm.applynum" ></el-input-number>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addgoodsFormVisible = false ">取 消</el-button>
+        <el-button type="primary" @click="Handleaddgoods">确 定</el-button>
+      </div>
+    </el-dialog>
+     
 
 <el-dialog title="添加任务" :visible.sync="InsertFormVisible" :close-on-click-modal="true">
       <el-form  :inline="true" :model="InsertForm" label-width="90px">
@@ -187,6 +223,53 @@
     </el-dialog>
 
 
+
+
+<el-dialog title="新增物资需求" :visible.sync="addplangoodsFormVisible" :close-on-click-modal="true">
+      <el-form  :inline="true" :model="addgoodsplanForm"  class="demo-form-inline" label-width="80px">
+      
+
+ <el-select v-model="value2"  placeholder="请选择物资类型" @change="handleTypeChange">
+    <el-option
+      v-for="item in SelectType"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+ </el-select>
+
+  <el-select
+    v-model="addgoodsplanForm.goodsid"
+    placeholder="请选择物品" >
+    <el-option
+      v-for="item in GoodsByType"
+      :key="item.id"
+      :label= item.name
+      :value="item.id"
+      >
+    </el-option>
+  </el-select>      
+
+
+        <el-form-item label="预计数量">
+          <el-input v-model="addgoodsplanForm.plannum" ></el-input>
+        </el-form-item>
+
+        <el-form-item label="当前所需">
+          <el-input v-model="addgoodsplanForm.applynum"  ></el-input>
+        </el-form-item>
+
+     
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addplangoodsFormVisible = false ">取 消</el-button>
+        <el-button type="primary" @click="Handleaddgoodsplan">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!-- ------------------ -->
+
 <!-- 任务详情 ------------------------------------------------------->
     <el-dialog title="任务详情" :visible.sync="ViewFormVisible" :close-on-click-modal="true">
       <el-form  :inline="true" :model="ViewForm"  class="demo-form-inline" label-width="80px">
@@ -257,7 +340,7 @@
     </el-dialog>
 
 
-<el-dialog title="添加图片" :visible.sync="ImageFormVisible" :close-on-click-modal="true">
+<!-- <el-dialog title="添加图片" :visible.sync="ImageFormVisible" :close-on-click-modal="true">
       <el-form :model="UpdateForm" label-width="80px">
          <el-button type="primary" @click="addimage">添加图片+</el-button>
         <el-form-item label="入库编号">
@@ -268,7 +351,7 @@
         <el-button @click="UpdateFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="HandleUpdate">确 定</el-button>
       </div>
-    </el-dialog>
+    </el-dialog> -->
 
 
 
@@ -292,7 +375,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="addimageFormVisible = false">取 消</el-button>
         <!-- <el-button type="" @click="onSubmit">提交</el-button> -->
-        <el-button type="primary" @click="Handleupload">添加完成 </el-button>
+        <!-- <el-button type="primary" @click="Handleupload">添加完成 </el-button> -->
       </div>
     </el-dialog>
 
@@ -304,7 +387,12 @@ import {
           listProgress,
           uploadimage,
           AddProgress,
-          listpjGoods
+          listpjGoods,
+          getimageurl,
+          GoodsByType,
+          AddProgoods,
+          deleteprojectgoods,
+          addprojectgoods,
     } from "../api/api";
 export default {
     data(){
@@ -318,6 +406,7 @@ export default {
             fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
       ,
             Project:[],
+            tabPosition: 'top',
             Pjgoods:[],
             Progress:[],
              activeNames: ['1'],
@@ -326,15 +415,39 @@ export default {
               fileList:[],
               
         dialogImageUrl:'',
+        images:[],
+        addgoodsForm:{
+          id:"",
+          goodsid:"",
+          plannum:"",
+          actualnum:"",
+          projectid:this.$route.query.projectid,
+          date:"",
+          applynum:""
+        }
+        ,
+         SelectType:[
+        {
+          value:"1",
+          label:"材料"
+        },
+        {
+          value:"2",
+          label:"设备"
+        }
+      ],
+      GoodsByType:[]
+        ,
 
              PageInfo:1,
              goodscurrentPage:1,
              UpdateFormVisible:false,
              ViewFormVisible:false,
              InsertFormVisible:false,
-             addimageFormVisible:true,
+             addimageFormVisible:false,
              dialogVisible:false,
              ImageFormVisible:false,
+             addplangoodsFormVisible:false,
              UpdateForm:{
                id:"",
              },
@@ -356,6 +469,17 @@ export default {
              Insertpjgoods:{
                 id:"",
              },
+             addgoodsFormVisible:false,
+             addgoodsplanForm:{
+               goodsid:"",
+               plannum:"",
+               actualnum:0,
+               applynum:"",
+               projectid:"",
+               date:""
+
+             },
+             value2:"",
              InsertForm:{
               prname:"",
               planstart:"",
@@ -380,12 +504,23 @@ export default {
     this.getList();
     this.getprogress();
     this.getPjgoods();
+    this.getimage();
   },
   methods: {
       getList(){
           this.projectid =this.$route.query.projectid;
           QueryProject(this.projectid).then(response => {
           this.Project = response.data;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      },
+      getimage(){
+        getimageurl(this.$route.query.projectid).then(response => {
+          this.images = response.data.imageurl;
+          console.log(response.data);
+          console.log(this.images);
         })
         .catch(function(error) {
           console.log(error);
@@ -452,6 +587,16 @@ export default {
         this.fileList=fileList
  
       },
+      handleTypeChange:function(val)
+    {
+      this.chooseType =val;
+      GoodsByType(this.chooseType).then(response =>{
+        this.GoodsByType = response.data;
+      })
+      .catch(function(error) {
+          console.log(error);
+        });
+    },
       OnRemove(file,fileList){
         this.fileList=fileList
       },
@@ -473,7 +618,44 @@ export default {
       },
       handlePreview(file) {
         console.log(file);
-      }
+      },
+      clickinsertimage(){
+        this.addimageFormVisible = true;
+      },
+      clickaddgoods(){
+        this.addplangoodsFormVisible = true;
+      },
+      Clickadd(row){
+          this.addgoodsFormVisible =true;
+          this.addgoodsForm = Object.assign({}, row);
+      },
+      Handleaddgoodsplan(){
+        this.addgoodsplanForm.projectid =this.$route.query.projectid;
+          AddProgoods(this.addgoodsplanForm).then(response =>{
+        if(response.data.code =="1")
+        {
+          alert("添加申请成功！")
+          this.addplangoodsFormVisible =false;
+        }
+      })
+      .catch(function(error) {
+          console.log(error);
+        });
+      },
+      Handleaddgoods(){
+        this.addgoodsForm.projectid = this.$route.query.projectid;
+        addprojectgoods(this.addgoodsForm).then(response =>{
+        if(response.data.code =="1")
+        {
+          alert("申请成功提交！")
+          this.addplangoodsFormVisible =false;
+        }
+      })
+      .catch(function(error) {
+          console.log(error);
+        });
+       
+      },
   }
 }
 </script>

@@ -105,6 +105,9 @@ export const uploadimage = (params,params2) =>{return axios.post(`${host}/upload
 //项目统计信息
 export const projectcount = params =>{return axios.get(`${host}/projectcount/${params}`)}
 
+//图片路径
+export const getimageurl = params =>{return axios.get(`${host}/pimage/?projectid=${params}`)}
+
 
 //修改项目
 export const updateproject = (params2) =>{return axios.patch(`${host}/project/`,params2)}
@@ -113,3 +116,18 @@ export const AddProgress = params =>{return axios.post(`${host}/progress/`, para
 
 //工程物品清单
 export const listpjGoods = (params,params2) =>{return axios.get(`${host}/projectgoods/?projectid=${params}`+`&page=${params2}`)}
+
+//添加物资申请
+export const AddProgoods = params =>{return axios.post(`${host}/projectgoods/`, params)};
+
+//出库申请列表
+export const listGoodsApply = params =>{return axios.get(`${host}/goodsapply/?page=${params}`)};
+
+//审核出库申请
+export const audiGoodsApply  = (params2) =>{return axios.patch(`${host}/goodsapply/`,params2)}
+
+//继续添加申请
+export const addprojectgoods = params =>{return axios.patch(`${host}/addprojectgoods/`, params)};
+
+//退回物资
+export const deleteprojectgoods   =  (params,params2,params3) =>{return axios.patch(`${host}/deleteprojectgoods/?deletenum=${params}`+`&admin=${params2}`,params3)}

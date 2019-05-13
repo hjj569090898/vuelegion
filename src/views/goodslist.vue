@@ -77,7 +77,7 @@ export default {
                 diaPageInfo:1,
                 currentPage:1,
                 PageInfo:1,
-
+                nowstate:"",
                 tip:"请输入物品编号",   
             };
         },

@@ -24,8 +24,8 @@
             getData() {
                 this.images =[
        
-        "./static/image/1-201905101741-3bcb5f40.png",
-          'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg'
+        "./static/image/1-201905111052-5ec9095b.png",
+        //   'https://fuss10.elemecdn.com/9/bb/e27858e973f5d7d3904835f46abbdjpeg.jpeg'
     ]
             }
         }

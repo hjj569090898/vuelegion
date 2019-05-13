@@ -71,18 +71,37 @@
 <el-table-column prop="type" label="申用类型" width="130"></el-table-column>
 <el-table-column prop="date" label="申请时间" width="130"></el-table-column>
 <el-table-column prop="applicant" label="申请人" width="130"></el-table-column>
-<el-table-column prop="state" label="申请状态" width="110"></el-table-column>
+<el-table-column prop="state" label="申请状态" width="110">
+  
+     <template slot-scope="scope">
+          <span v-if="scope.row.state =='审核中'" style="color: #0000FF">{{ scope.row.state }}</span>
+          <span v-else-if="scope.row.state =='不通过'" style="color: red" >{{ scope.row.state }}</span>
+          <span v-else style="color: #37B328">{{ scope.row.state }}</span>
+        
+   </template>
+</el-table-column>
 <el-table-column prop="admin" label="审核人" width="110"></el-table-column>
 <el-table-column prop="advice" label="建议" width="110"></el-table-column>
- <el-table-column label="操作" width="220">
+ <el-table-column label="操作" width="110">
         <template slot-scope="scope">
-          <el-button @click="ClickList(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button>
+          <div v-if="scope.row.state =='审核中'">
           <el-button
             @click="ClickUpdate(scope.row)"
             type="text"
             size="medium"
             icon="el-icon-edit-outline"
-          >编辑</el-button>
+          >审核</el-button>
+          </div>
+
+          <div v-if="scope.row.state !='审核中'">
+          <el-button
+            @click="ClickUpdate(scope.row)"
+            type="text"
+            size="medium"
+            icon="el-icon-edit-outline"
+            disabled
+          >已审核</el-button>
+          </div>
           <!-- <el-button
             @click="ClickDelete(scope.row.in_id)"
             type="text"
@@ -126,7 +145,7 @@ export default {
             querystate:"",
             UpdateFormVisible:false,
             nowuser:"",
-            autiable:"true",
+            autiable:true,
             typeSelects:[{
           value: "",
           label: "全部"

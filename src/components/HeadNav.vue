@@ -50,7 +50,7 @@ export default {
   created() {
     // this.UserInfo();
     this.username = localStorage.getItem("User");
-    this.imagesrc = require('../assets/'+localStorage.getItem("User")+'.jpg');
+    this.imagesrc = require('../assets/avatar/'+localStorage.getItem("User")+'.jpg');
   },
   methods: {
     setDialogInfo(cmditem) {

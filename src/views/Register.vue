@@ -62,22 +62,38 @@
          <el-divider> 请上传头像(jpg)</el-divider>
       <el-upload
   class="avatar-uploader"
-  action="http://127.0.0.1:8083/upload"
+  :action="avatarurl"
   :show-file-list="false"
 
   :on-success="handleAvatarSuccess"
   :before-upload="beforeAvatarUpload">
-  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+  <img v-if="avatarurl" :src="avatarurl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
 </el-upload>
     </div>
 
 <div v-if="active===1">
 
-     <el-divider>请填写权限信息</el-divider>
+     <el-divider>填写权限信息</el-divider>
     <el-checkbox-group v-model="permissions" size="small">
-      <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button>
-    </el-checkbox-group>
+      </el-checkbox-group>
+      <!-- <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button> -->
+      <el-cascader-multi v-model="checkList"  @change="handlemultichange" :data="data"> </el-cascader-multi>
+      <!-- <el-form label-width="80px" ref="form" :model="form"  label-position="left">
+        <el-form-item label="ISP: " prop="isp">
+            <ele-multi-cascader
+              :options="option"
+              v-model="form.isp"
+              placeholder="选择运营商"
+              @change="ispChange"
+              >
+            </ele-multi-cascader>
+        </el-form-item>
+        <!-- <el-form-item>
+            <el-button type="primary" @click="submit">测试提交</el-button>
+        </el-form-item> -->
+    <!-- </el-form> --> 
+   
   
 </div>
     </el-main>
@@ -164,19 +180,21 @@
   <el-col :span="8">
 <el-divider>权限信息</el-divider>
     <el-checkbox-group v-model="permissions" size="small">
-      <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button>
+      <!-- <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" >{{per.label}}</el-checkbox-button>
+       -->
+       <el-cascader-multi v-model="checkList" @change="handlemultichange" :data="data"> </el-cascader-multi>
     </el-checkbox-group>
     <el-button style="margin-top: 12px;" @click="submitForm" >确认完毕，注册</el-button></el-col>
   <el-col :span="8">
      <el-divider> 个人头像</el-divider>
       <el-upload
   class="avatar-uploader"
-  action="http://127.0.0.1:8083/upload"
+  :action="avatarurl"
   :show-file-list="false"
 
   :on-success="handleAvatarSuccess"
   :before-upload="beforeAvatarUpload">
-  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+  <img v-if="avatarurl" :src="avatarurl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
 </el-upload>
   </el-col>
@@ -208,13 +226,60 @@ export default {
       }
     };
     return {
-      pers : [
-        {id:"stockin",label:'出库'},
-        {id:"stockout",label:'入库'},
-        {id:3,label:'广州'}, 
-        {id:4,label:'深圳'}
-        ],
+      checkList:[],
+      formlist:[],
+      form: {
+        isp: []
+      },
+     data: [
+        {
+          value: 'zhinan',
+          label: '指南',
+          children: [{
+            value: 'shejiyuanze',
+            label: '设计原则',
+            children: [{
+              value: 'yizhi',
+              label: '一致'
+            }, {
+              value: 'fankui',
+              label: '反馈'
+            }, {
+              value: 'xiaolv',
+              label: '效率'
+            }, {
+              value: 'kekong',
+              label: '可控'
+            }]
+          }, {
+            value: 'daohang',
+            label: '导航',
+            children: [{
+              value: 'cexiangdaohang',
+              label: '侧向导航'
+            }, {
+              value: 'dingbudaohang',
+              label: '顶部导航'
+            }]
+          }]
+        }, {
+          value: 'ziyuan',
+          label: '资源',
+          children: [{
+            value: 'axure',
+            label: 'Axure Components'
+          }, {
+            value: 'sketch',
+            label: 'Sketch Templates'
+          }, {
+            value: 'jiaohu',
+            label: '组件交互文档'
+          }]
+        }
+      ]
+,
        imageUrl: '',
+       tabPosition: 'top',
        active: 0,
       registerUser: {
         username: "",
@@ -227,6 +292,7 @@ export default {
         groupid: ""
       },
       isexits: "0",
+      avatarurl:"",
       username: "",
       permissions:[],
       group: [
@@ -279,7 +345,11 @@ export default {
    computed: {
     user() {
       return this.$store.getters.user;
-    }
+    },
+    
+  },
+    created() {
+    this.getList();
   },
   methods: {
     next() {
@@ -287,6 +357,9 @@ export default {
       },
        pre() {
          this.active--;
+      },
+      getList(){
+          this.avatarurl = "http://localhost:8083/avatar/"+localStorage.getItem("User")
       },
     submitForm() {
           register(this.registerUser.registerUser)
@@ -307,7 +380,7 @@ export default {
          
     },
     handleAvatarSuccess(res, file) {
-        this.imageUrl = URL.createObjectURL(file.raw);
+        this.avatarurl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/png';
@@ -320,6 +393,14 @@ export default {
           this.$message.error('上传头像图片大小不能超过 2MB!');
         }
         return isJPG && isLt2M;
+      },
+      handlemultichange(){
+        // for(i=0;i<this.checkList.length;i++)
+        // {
+        //   this.formlist[i]=this.checkList[i][2];
+        // }
+          console.log(this.checkList);
+          
       },
     validateisexits() {
       username(this.registerUser.username)
@@ -335,7 +416,12 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-    }
+    },
+     
+    ispChange(values, items) {
+      this.outputs.values = values;
+      this.outputs.items = items;
+    },
   }
 };
 </script>

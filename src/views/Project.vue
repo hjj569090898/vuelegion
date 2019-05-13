@@ -22,7 +22,7 @@
     <el-button type="success" @click="SeachClick">查询</el-button>
     <!-- @keyup.enter.native="SeachClick(Search.id)"  -->
 
-    <el-table :data="Project" @row-click="handdle" border style="width: 100%">
+    <el-table :data="Project"  border style="width: 100%">
       <el-table-column prop="id" label="项目编号" width="140"></el-table-column>
       <el-table-column prop="pjname" label="工程名" width="160"></el-table-column>
       <el-table-column prop="planstart" label="计划开始时间" width="130"></el-table-column>
@@ -34,13 +34,25 @@
       <el-table-column prop="pnow" label="阶段" width="110"></el-table-column>
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
-          <el-button @click="ClickList(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button>
+          <el-button @click="handdle(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button>
+
+          <div v-if="scope.row.pnow !='已验收'">
           <el-button
             @click="ClickUpdate(scope.row)"
             type="text"
             size="medium"
             icon="el-icon-edit-outline"
-          >编辑</el-button>
+          >更新工程</el-button>
+          </div>
+
+            <div v-if="scope.row.pnow =='已验收'">
+          <el-button
+           disabled
+            type="text"
+            size="medium"
+            icon="el-icon-edit-outline"
+          >已验收</el-button>
+          </div>
           <!-- <el-button
             @click="ClickDelete(scope.row.in_id)"
             type="text"
@@ -133,8 +145,8 @@
           <el-form-item label="负责人">
             <el-input v-model="UpdateForm.leader"></el-input>
           </el-form-item>
-          <el-form-item label="合同编号">
-            <el-input v-model="UpdateForm.ctid"></el-input>
+          <el-form-item label="合同金额">
+            <el-input v-model="UpdateForm.money"></el-input>
           </el-form-item>
           <el-form-item label="工程阶段">
             <el-select v-model="UpdateForm.pnow" placeholder="工程阶段">
@@ -208,8 +220,8 @@
           <el-form-item label="负责人">
             <el-input v-model="InsertForm.leader"></el-input>
           </el-form-item>
-          <el-form-item label="合同编号">
-            <el-input v-model="InsertForm.ctid"></el-input>
+          <el-form-item label="合同金额">
+            <el-input v-model="InsertForm.money"></el-input>
           </el-form-item>
           <el-form-item label="工程阶段">
             <el-select v-model="InsertForm.pnow" placeholder="工程阶段">
@@ -286,7 +298,7 @@ export default {
         },
         { value: "施工中", label: "施工中" },
         { value: "已完工", label: "已完工" },
-        { value: "其他", label: "其他" }
+        { value: "已验收", label: "已验收" }
       ],
       Project: [],
       id: "123",
@@ -303,7 +315,7 @@ export default {
         actualstart: "",
         actualend: "",
         leader: "",
-        ctid: "",
+        money: "",
         pnow: ""
       },
       UpdateForm: {
@@ -315,7 +327,7 @@ export default {
         actualstart: "",
         actualend: "",
         leader: "",
-        ctid: "",
+        money: "",
         pnow: ""
       },
 
@@ -324,7 +336,7 @@ export default {
           data: ["计划给予", "当前进度计划", "当前消耗"]
         },
         xAxis: {
-          type: "category", // 还有其他的type，可以去官网喵两眼哦
+          type: "category", 
           data: ["时长(天)", "花费(万)", "人工(人/天)"], // x轴数据
           name: "资源类型", // x轴名称
           // x轴名称样式
@@ -435,7 +447,7 @@ export default {
     },
     handleUpdate() {
       this.dialogTableVisible = false;
-      this.UpdateForm.id = this.aproject;
+      // this.UpdateForm.id = this.aproject;
       updateproject(this.UpdateForm)
         .then(response => {
           this.UpdateFormVisible = false;
