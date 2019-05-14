@@ -4,7 +4,11 @@ let host ='http://127.0.0.1:8083'
 
 //获取库存信息
 // export const getGoods =  (params,params2,params3) =>{return axios.get(`${host}/goods/?page=${params}`+`&type=${params2}`+`&search=${params3}`)};
-export const getGoods = params => {return axios.get(`${host}/goods/`,params)};
+export const getGoods = params => {return axios.get(`${host}/goods/?page=${params}`)};
+//获得库存流水
+export const getgoodsflow = params => {return axios.get(`${host}/goodsflow/?page=${params}`)};
+//id查询商品
+export const goodsbyid = params =>{return axios.get(`${host}/goods/${params}`)}
 //商品入库库存
 export const GoodsIn = params =>{return axios.post(`${host}/goods/`), params};
 //修改库存信息
@@ -27,7 +31,8 @@ export const getuserInfo = params =>{
 export const infomodify = params =>{
   return axios.patch(`${host}/updateinfo/`, params)
 }
-
+//删除用户
+export const DeleteUser = params =>{ return axios.delete(`${host}/deleteuser/`+`${params}/`)}
 //申请财务列表
 export const Userapplylist = params =>{
   return axios.get(`${host}/userapply/?username=${params}`)
@@ -100,7 +105,7 @@ export const auditi = (params,params2,params3,params4,params5) =>
 export const  listProgress = (params,params2) =>{return axios.get(`${host}/progress?projectid=${params}`+`&page=${params2}`)}
 
 //图片
-export const uploadimage = (params,params2) =>{return axios.post(`${host}/upload/?id=${params}`, params2)}
+export const uploadimage = (params,params2) =>{return axios.post(`${host}/upload/${params}`, params2)}
 
 //项目统计信息
 export const projectcount = params =>{return axios.get(`${host}/projectcount/${params}`)}
@@ -131,3 +136,6 @@ export const addprojectgoods = params =>{return axios.patch(`${host}/addprojectg
 
 //退回物资
 export const deleteprojectgoods   =  (params,params2,params3) =>{return axios.patch(`${host}/deleteprojectgoods/?deletenum=${params}`+`&admin=${params2}`,params3)}
+
+//权限修改
+export const addpermission = (params,params2) =>{return axios.post(`${host}/addpermission/${params}?permissions=${params2}`)};

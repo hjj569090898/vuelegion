@@ -64,8 +64,24 @@
 <el-table-column prop="goodsid" label="物品编号" width="130"></el-table-column>
 <el-table-column prop="name" label="物品名称" width="130"></el-table-column>
 <el-table-column prop="plannum" label="计划数量" width="130"></el-table-column>
-<el-table-column prop="actualnum" label="当前数量" width="130"></el-table-column>
-<el-table-column prop="applynum" label="申请中的数量" width="170"></el-table-column>
+<el-table-column prop="actualnum" label="当前数量" width="130">
+
+<template slot-scope="scope">
+          <span v-if="scope.row.actualnum == scope.row.plannum" style="color: #0000FF">{{ scope.row.actualnum }}</span>
+          <span v-else-if="scope.row.actualnum >= scope.row.plannum" style="color: red">{{ scope.row.actualnum }}</span>
+          <span v-else style="color: #37B328">{{ scope.row.actualnum }}</span>
+        </template>
+
+</el-table-column>
+<el-table-column prop="applynum" label="申请中的数量" width="170">
+
+<template slot-scope="scope">
+          <span v-if="(scope.row.actualnum +scope.row.applynum) == scope.row.plannum" style="color: #0000FF">{{ scope.row.applynum }}</span>
+          <span v-else-if="(scope.row.actualnum +scope.row.applynum) >= scope.row.plannum" style="color: red">{{ scope.row.applynum }}</span>
+          <span v-else style="color: #37B328">{{ scope.row.applynum }}</span>
+        </template>
+
+</el-table-column>
 <el-table-column prop="date" label="变更时间" width="110"></el-table-column>
 <el-table-column label="操作" width="220">
         <template slot-scope="scope">
@@ -143,7 +159,37 @@
         <el-button type="primary" @click="Handleaddgoods">确 定</el-button>
       </div>
     </el-dialog>
-     
+
+
+
+    <!--  -->
+<el-dialog title="申请物资补充" :visible.sync="deletegoodsFormVisible" :close-on-click-modal="true">
+      <el-form  :model="deletegoodsForm"  class="demo-form-inline" label-width="80px">
+
+         <el-form-item label="物品编号">
+          <el-input v-model="deletegoodsForm.goodsid" disabled></el-input>
+        </el-form-item>
+
+        <el-form-item label="预计数量">
+          <el-input v-model="deletegoodsForm.plannum" disabled></el-input>
+        </el-form-item>
+
+        <el-form-item label="当前已用">
+          <el-input v-model="deletegoodsForm.actualnum"  disabled ></el-input>
+        </el-form-item>
+
+      <el-form-item label="现在退回">
+          <el-input-number v-model="deletenum" ></el-input-number>
+        </el-form-item>
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="deletegoodsFormVisible = false ">取 消</el-button>
+        <el-button type="primary" @click="Handledeletegoods">确 定</el-button>
+      </div>
+    </el-dialog>
+    <!--                 -->
+
 
 <el-dialog title="添加任务" :visible.sync="InsertFormVisible" :close-on-click-modal="true">
       <el-form  :inline="true" :model="InsertForm" label-width="90px">
@@ -249,7 +295,6 @@
       >
     </el-option>
   </el-select>      
-
 
         <el-form-item label="预计数量">
           <el-input v-model="addgoodsplanForm.plannum" ></el-input>
@@ -375,7 +420,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="addimageFormVisible = false">取 消</el-button>
         <!-- <el-button type="" @click="onSubmit">提交</el-button> -->
-        <!-- <el-button type="primary" @click="Handleupload">添加完成 </el-button> -->
+        <el-button type="primary" @click="Handleupload">添加完成 </el-button>
       </div>
     </el-dialog>
 
@@ -424,8 +469,16 @@ export default {
           projectid:this.$route.query.projectid,
           date:"",
           applynum:""
-        }
-        ,
+        },
+         deletegoodsForm:{
+          id:"",
+          goodsid:"",
+          plannum:"",
+          actualnum:"",
+          projectid:this.$route.query.projectid,
+          date:"",
+          applynum:""
+        },
          SelectType:[
         {
           value:"1",
@@ -470,6 +523,7 @@ export default {
                 id:"",
              },
              addgoodsFormVisible:false,
+             deletegoodsFormVisible:false,
              addgoodsplanForm:{
                goodsid:"",
                plannum:"",
@@ -479,6 +533,7 @@ export default {
                date:""
 
              },
+             deletenum:0,
              value2:"",
              InsertForm:{
               prname:"",
@@ -607,11 +662,12 @@ export default {
       Handleupload(file){
           // this.param.append("id",this.UpdateForm.id)    
           this.param.append("file",this.file)  
-        uploadimage(this.UpdateForm.id,this.param) 
+        uploadimage(this.$route.query.projectid,this.param) 
           .then(res=>{
             console.log(res);
             alert(res);
           })
+          addimageFormVisible = false;
       },
       handleRemove(file, fileList) {
         console.log(file, fileList);
@@ -628,6 +684,10 @@ export default {
       Clickadd(row){
           this.addgoodsFormVisible =true;
           this.addgoodsForm = Object.assign({}, row);
+      },
+         Clickdelete(row){
+          this.deletegoodsFormVisible =true;
+          this.deletegoodsForm = Object.assign({}, row);
       },
       Handleaddgoodsplan(){
         this.addgoodsplanForm.projectid =this.$route.query.projectid;
@@ -655,6 +715,21 @@ export default {
           console.log(error);
         });
        
+      },
+      Handledeletegoods(){
+          deleteprojectgoods(this.deletenum,localStorage.getItem("User"),this.deletegoodsForm).then(response =>{
+        if(response.data.code =="1")
+        {
+          alert("物品成功退回")
+          this.deletegoodsFormVisible =false;
+        }
+      })
+      .catch(function(error) {
+          console.log(error);
+        });
+          
+
+          
       },
   }
 }

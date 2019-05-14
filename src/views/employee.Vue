@@ -2,17 +2,17 @@
     <div>
          <el-input
       :placeholder="tip"
-      v-model="search.id"
+      v-model="searchid"
       style="width: 280px;"
       class="filter-item"
       prefix-icon="el-icon-search"
       @keyup.enter.native="seachClick"
     />
 
-    <el-select v-model="search.group" placeholder="选择部门" style="width: 200px" @change="listbygroup">
+    <el-select v-model="searchgroup" placeholder="选择部门" style="width: 200px" @change="getList">
       <el-option v-for="item in Groups" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
-    <el-button type="success" @click="ClickQuery()">查询</el-button>
+    <el-button type="success" @click="getList">查询</el-button>
       <div>
          <el-button type="primary" @click="ClickInsert()">+人员入职</el-button>
      </div>
@@ -59,14 +59,19 @@
     </div>
 </template>
 <script>
-import { getAllUser } from "../api/api";
+import { getAllUser,
+DeleteUser,
+UserBygroupid, } from "../api/api";
 import router from '../router/index';
 export default {
     data(){
         return{
             tip:"姓名/员工编号",
-            search:{id:"",group:""},
+            // search:{id:"",group:""},
+            searchgroup:"",
+            searchid:"",
             Groups: [
+              {value:"",label:"全部"},
         { value: "1", label: "行政部" },
         { value: "2", label: "人事部" },
         { value: "3", label: "仓储部" },
@@ -86,7 +91,9 @@ export default {
   },
     methods: {
      getList(){
-         this.current = 1;
+       if(this.searchgroup=="")
+       {
+         
           getAllUser(this.currentPage)
         .then(response => {
           this.listuser = response.data.user;
@@ -96,9 +103,23 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-     },
-     handleCurrentChange(){
+     }
+     else{
 
+          UserBygroupid(this.searchgroup,this.currentPage) .then(response => {
+          this.listuser = response.data.user;
+          // this.PageInfo = response.data;
+          this.PageInfo = response.data.length;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+
+     }
+     },
+     handleCurrentChange(value){
+       this.currentPage = value;
+        this.getList();
      },
      listbygroup(){},
 
@@ -109,6 +130,38 @@ export default {
     routerto(row){
       console.log(row.username);
            this.$router.push({path:'/infomodify',query:{username:row.username,groupable:false}});
+    },
+       ClickDelete(id) {
+      this.$confirm("是否删除该账户信息, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true
+      })
+        .then(() => {
+          DeleteUser(id)
+            .then(response => {
+              this.getList();
+              this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+        
+    },
+    ClickQuery(){
+     
     },
     }
 }

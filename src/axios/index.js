@@ -55,6 +55,10 @@ axios.interceptors.response.use(response => {
     {
         Message.error('抱歉，您的请求存在错误')
     }
+    else if(status==500)
+    {
+        Message.error("抱歉，操作失败，请检查您的数据。")
+    }
 
     return Promise.reject(error)
 })

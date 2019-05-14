@@ -8,6 +8,7 @@
       prefix-icon="el-icon-search"
       @keyup.enter.native="SeachClick"
     />
+       
     <el-button type="success" round @click="SeachClick">查询</el-button>
   <el-select v-model="nowstate" placeholder="全部" style="width: 200px" @change="getUserInfo">
       <el-option v-for="item in Selects" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -29,18 +30,15 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         layout="total, prev, pager, next"
-        :total="PageInfo"
-      >
-        <!-- data="tableData.slice((currentPage-1)pagesize,currentPagepagesize)"； -->
+        :total="PageInfo">
       </el-pagination>
     </div>
 
-<el-dialog title="仓储变动记录" :visible.sync="dialogTableVisible" customClass="customWidth">
+<el-dialog title="仓储变动记录" :visible.sync="dialogTableVisible"  :close-on-click-modal="true">
   <el-table :data="goodsflow">
     <el-table-column property="id" label="编号" width="150"></el-table-column>
-    <el-table-column property="goodsid" label="姓名" width="200"></el-table-column>
-      <el-table-column property="name" label="姓名" width="200"></el-table-column>
-    <el-table-column property="num" label="地址"></el-table-column>
+    <el-table-column property="goodsid" label="物品编号" width="200"></el-table-column>
+    <el-table-column property="num" label="数量变化"></el-table-column>
      <el-table-column property="date" label="日期" width="100"></el-table-column>
       <el-table-column property="admin" label="管理员" width="100"></el-table-column>
        <el-table-column property="descs" label="描叙" width="100"></el-table-column>
@@ -49,12 +47,10 @@
   <div class="block">
       <span class="demonstration"></span>
       <el-pagination
-        @current-change="handlediaCurrentChange"
-        :current-page="diacurrentPage"
+        @current-change="handlegoodsflowCurrentChange"
+        :current-page="nowpage"
         layout="total, prev, pager, next"
-        :total="diaPageInfo"
-      >
-        <!-- data="tableData.slice((currentPage-1)pagesize,currentPagepagesize)"； -->
+        :total="allcount" >
       </el-pagination>
     </div>
 </el-dialog>
@@ -64,10 +60,16 @@
 
 
 <script>
-import  {getGoods}  from "../api/api";
+import  {getGoods,
+        getgoodsflow,
+        goodsbyid,
+}  from "../api/api";
 export default {
         data () {
             return {
+              nowpage:1,
+              allcount:0,
+              nowname:"",
                 tableDate: [],
                 goodsflow:[],
                 Selects:[{value:"",label:"其他"},{value:1,label:"材料"},{value:2,label :"设备"},{value:3,label:"其他"}],
@@ -79,11 +81,13 @@ export default {
                 PageInfo:1,
                 nowstate:"",
                 tip:"请输入物品编号",   
+                tips:"请输入物品名称",  
             };
         },
        
         created () {
             this.getUserInfo();
+            this.getflow();
         },
         watch: {
 
@@ -92,28 +96,50 @@ export default {
 
         },
         methods: {
-            getUserInfo () { //请求用户信息
-              getGoods().then((response)=> {
-                    this.tableDate = response.data;
+            getUserInfo () { 
+              console.log(this.currentPage);
+              getGoods(this.currentPage).then((response)=> {
+                    this.tableDate = response.data.goods;
+                    this.PageInfo =response.data.length;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            getflow(){
+              getgoodsflow(this.nowpage).then((response)=> {
+                    this.goodsflow = response.data.goodsflow;
+                    this.allcount = response.data.length;
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
             SeachClick(){
-
+              if(this.nowid ==""){
+                this.getUserInfo();
+              }
+              else{
+                goodsbyid(this.nowid).then((response)=> {
+                    this.tableDate = response.data;
+                    this.PageInfo = 1 ;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
             },
-            handleCurrentChange(){
-
+            handleCurrentChange(val){
+              this.currentPage = val;
+              this.getUserInfo();
             },
             handlediaCurrentChange(){
-
-            }
-            
-        }
+                this.getflow();
+            },
+            handlegoodsflowCurrentChange(val){
+              this.nowpage =val;
+           this.getflow(); 
+        },
     }
+}
 </script>
 <style>
-       .customWidth{
-        width:120%;
-    }
+    
       </style>
