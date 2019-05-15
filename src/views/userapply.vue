@@ -7,8 +7,15 @@
       <el-table-column prop="money" label="金额" width="140"></el-table-column>
       <el-table-column prop="date" label="申请日" width="110"></el-table-column>
       <el-table-column prop="reason" label="原因" width="180"></el-table-column>
-      <el-table-column prop="state" label="状态" width="110"></el-table-column>
-      <el-table-column prop="audidate" label="audidate" width="110"></el-table-column>
+      <el-table-column prop="state" label="状态" width="110">
+      <template slot-scope="scope">
+          <span v-if="scope.row.state =='审核中'" style="color: #0000FF">{{ scope.row.state }}</span>
+          <span v-else-if="scope.row.state =='申请失败'" style="color: red">{{ scope.row.state }}</span>
+          <span v-else style="color: #37B328">{{ scope.row.state }}</span>
+        </template>
+
+      </el-table-column>
+      <el-table-column prop="audidate" label="审批日" width="110"></el-table-column>
       </el-table>
 
  <el-dialog title="项目立项" :visible.sync="InsertFormVisible" :close-on-click-modal="true">

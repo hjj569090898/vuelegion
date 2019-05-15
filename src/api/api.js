@@ -10,7 +10,7 @@ export const getgoodsflow = params => {return axios.get(`${host}/goodsflow/?page
 //id查询商品
 export const goodsbyid = params =>{return axios.get(`${host}/goods/${params}`)}
 //商品入库库存
-export const GoodsIn = params =>{return axios.post(`${host}/goods/`), params};
+export const GoodsIn = (params,params2) =>{return axios.post(`${host}/goods/${params}`, params2)};
 //修改库存信息
 export const GoodsModify = params =>{return axios.patch(`${host}/goods/`), params};
 //获得商品分类信息
@@ -90,6 +90,9 @@ export const searchFinance =  (params) =>{return axios.get(`${host}/finance/`+`$
 //获得所有职员信息分组
 export const UserBygroupid = (params,params2) =>{return axios.get(`${host}/getuserbyg?groupid=${params}`+`&page=${params2}`)}
 
+// //获得所有职员信息分组数量
+// export const UserBygroupid = (params,params2) =>{return axios.get(`${host}/getuserbyg?groupid=${params}`+`&page=${params2}`)}
+
 //获得所有职员信息
 export const getAllUser = params =>{return axios.get(`${host}/getuser/?page=${params}`)}
 
@@ -118,6 +121,9 @@ export const getimageurl = params =>{return axios.get(`${host}/pimage/?projectid
 export const updateproject = (params2) =>{return axios.patch(`${host}/project/`,params2)}
 //添加任务
 export const AddProgress = params =>{return axios.post(`${host}/progress/`, params)};
+
+//修改任务
+export const updateprogress = (params2) =>{return axios.patch(`${host}/progress/`,params2)}
 
 //工程物品清单
 export const listpjGoods = (params,params2) =>{return axios.get(`${host}/projectgoods/?projectid=${params}`+`&page=${params2}`)}

@@ -148,7 +148,9 @@ export default {
   methods: {
     userinfo(){
       console.log(this.groupable);
+      
       this.myuser = this.$route.query.username;
+      console.log(this.myuser);
       this.groupable= this.$route.query.groupable;
          getmyuser(this.myuser).then(response => {
           this.registerUser = response.data.info;
@@ -157,9 +159,14 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-        
-          this.avatarurl = "http://localhost:8083/avatar/"+localStorage.getItem("User")
+        if(this.myuser==null){
+          this.avatarurl = "http://localhost:8083/avatar/"+localStorage.getItem("User");
+           this.imageUrl =  require('../assets/avatar/'+localStorage.getItem("User")+'.jpg')//"../assets/"+this.myuser+".jpg";
+        }
+        else{
+           this.avatarurl = "http://localhost:8083/avatar/"+this.myuser;
           this.imageUrl =  require('../assets/avatar/'+this.myuser+'.jpg')//"../assets/"+this.myuser+".jpg";
+        }
       
       },
        beforeAvatarUpload(file) {

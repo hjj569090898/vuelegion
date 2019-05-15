@@ -23,6 +23,7 @@
 <script>
 import jwt_decode from "jwt-decode";
 import { login } from '../api/api'
+import { Message, Loading } from 'element-ui';
 export default {   
   name: "login",
   data() {
@@ -53,6 +54,15 @@ export default {
         if (valid) {
           login(this.loginUser).then(res => {
         
+            if(res.data.code ==0)
+            {
+              Message.error('用户名或密码错误！');
+            }
+            else if(res.data.code ==1){
+              this.$message({
+          message: '登录成功',
+          type: 'success'
+        });
             const { token } = res.data.jwt;
             const {User} =res.data.User;
          
@@ -65,11 +75,11 @@ export default {
 
             // 页面跳转
             this.$router.push("/index");
-            alert(res.data.result);
+            }
           });
         } else {
           console.log("error submit!!");
-          Message.error(res.data.result);
+          Message.error(res);
           return false;
         }
       });

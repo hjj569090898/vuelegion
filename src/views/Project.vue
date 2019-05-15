@@ -84,7 +84,7 @@
         <el-divider content-position="left"></el-divider>
         <div>项目共有任务数量 :{{progressnum}}</div>
         <div>计划花费 ：{{plancost}} 当前花费 ：{{accoust}}</div>
-        <div>额外费用{{subcost}}</div>
+        <div>额外费用 : {{subcost}}</div>
         <div>计划人工用时 ：{{planwork}} 当前人工用时 ：{{acwork}}</div>
         <div>计划维修时长 ：{{planday}} 当前已用时长 ：{{acday}}</div>
         <div>开工延迟时间:{{delaystart}} 完工延迟时间：{{delayend}}</div>

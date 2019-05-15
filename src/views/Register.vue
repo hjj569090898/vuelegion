@@ -88,10 +88,10 @@
             </div>
 
             <div v-if="active===1">
-              <el-divider>填写权限信息</el-divider>
+              <el-divider>选择用户额外权限</el-divider>
               <el-checkbox-group v-model="permissions" size="small"></el-checkbox-group>
               <!-- <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button> -->
-              <el-cascader-multi v-model="checkList" @change="handlemultichange" :data="data"></el-cascader-multi>
+              <el-cascader-multi v-model="checkList" :value="hadpermission" @change="handlemultichange" :data="data"></el-cascader-multi>
               <!-- <el-form label-width="80px" ref="form" :model="form"  label-position="left">
         <el-form-item label="ISP: " prop="isp">
             <ele-multi-cascader
@@ -244,17 +244,18 @@ export default {
       form: {
         isp: []
       },
+      hadpermission:["goods","project","progress"],
       data: [
         {
           value: "",
           label: "财务",
           children: [
             {
-              value: "shejiyuanze",
+              value: "auditing",
               label: "财务审核",
             },
             {
-              value: "daohang",
+              value: "finance",
               label: "财务流水查看",
               
             }
@@ -269,15 +270,15 @@ export default {
               label: "仓储库存"
             },
             {
-              value: "sketch",
+              value: "stockin",
               label: "入库申请"
             },
             {
-              value: "jiaohu",
+              value: "goodsapply",
               label: "出库审核"
             },
             {
-              value: "jiaohu",
+              value: "goodsflow",
               label: "库存流水查看"
             }
           ]
@@ -287,21 +288,14 @@ export default {
           label: "工程",
           children: [
             {
-              value: "goods",
+              value: "project",
               label: "工程管理"
             },
             {
-              value: "sketch",
+              value: "progress",
               label: "任务添加"
-            },
-            {
-              value: "jiaohu",
-              label: "出库审核"
-            },
-            {
-              value: "jiaohu",
-              label: "库存流水查看"
             }
+         
           ]
         },
         {
@@ -309,20 +303,20 @@ export default {
           label: "人事",
           children: [
             {
-              value: "goods",
+              value: "getuser",
               label: "人员查看"
             },
             {
-              value: "sketch",
+              value: "register",
               label: "注册功能"
             },
             {
-              value: "jiaohu",
+              value: "deleteuser",
               label: "账户删除"
             },
             {
-              value: "jiaohu",
-              label: "库存流水查看"
+              value: "addpermission",
+              label: "用户权限修改"
             }
           ]
         }
@@ -466,6 +460,8 @@ export default {
     },
     theaddpermission(){
       this.zifuchuan= this.checkList.join(',')
+      console.log(this.zifuchuan);
+      console.log(this.checkList);
        addpermission(this.registerUser.username, this.zifuchuan).then(response => {
               if(response.data.code ==1)
               {

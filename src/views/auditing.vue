@@ -115,7 +115,7 @@
       <span class="demonstration"></span>
       <el-pagination
         background
-        @current-change="getList"
+        @current-change="handlePageChange"
         :current-page="currentPage"
         layout="total, prev, pager, next"
         :total="PageInfo"
@@ -154,11 +154,11 @@ export default {
           value: "仓储入库",
           label: "仓储申用"
         },
-        {
-          value: "项目申用",
-          label: "项目申用"
-        },
-        { value: "个人申用", label: "个人申用" }], 
+        // {
+        //   value: "项目申用",
+        //   label: "项目申用"
+        // },
+        { value: "个人", label: "个人申用" }], 
          stateSelects:[{
           value: "", label: "全部" },
         {
@@ -235,6 +235,11 @@ export default {
       }) .catch(function(error) {
           console.log(error);
         });
+    },
+    handlePageChange(value)
+    {
+      this.currentPage =value;
+      this.getList();
     },
     HandleSearch(){
       if(this.queryid==""){

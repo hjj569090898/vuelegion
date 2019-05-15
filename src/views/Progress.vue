@@ -271,6 +271,86 @@
 
 
 
+    <el-dialog title="修改任务" :visible.sync="UpdateFormVisible" :close-on-click-modal="true">
+      <el-form  :inline="true" :model="UpdateForm" label-width="90px">
+         
+        <el-form-item label="任务名称">
+          <el-input v-model="UpdateForm.prname" width="150px"></el-input>
+        </el-form-item>
+<el-form-item label="计划开始">
+          <el-date-picker
+      v-model="UpdateForm.planstart"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="选择计划开工时间">
+    </el-date-picker>
+        </el-form-item>
+        <el-form-item label="计划完工">
+         <el-date-picker
+      v-model="UpdateForm.planend"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="选择计划完工时间">
+    </el-date-picker>
+        </el-form-item>
+
+        <el-form-item label="实际开始">
+          <el-date-picker
+      v-model="UpdateForm.actualstart"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="实际开工时间(可不填)">
+    </el-date-picker>
+        </el-form-item>
+
+          <el-form-item label="实际完工">
+          <el-date-picker
+      v-model="UpdateForm.actualend"
+      type="date"
+      value-format="yyyy-MM-dd"
+      placeholder="实际完工时间(可不填)">
+    </el-date-picker>
+        </el-form-item>
+        <el-form-item label="计划花费">
+          <el-input  v-model="UpdateForm.plancost"></el-input>
+        </el-form-item>  
+        <el-form-item label="实际花费">
+          <el-input  v-model="UpdateForm.actualcost"></el-input>
+        </el-form-item>
+        <el-form-item label="计划人工">
+          <el-input  v-model="UpdateForm.planworking"></el-input>
+        </el-form-item>
+        <el-form-item label="实际人工">
+          <el-input  v-model="UpdateForm.actualworking"></el-input>
+        </el-form-item>
+          <el-form-item label="其他费用">
+          <el-input  v-model="UpdateForm.subcontractcost"></el-input>
+        </el-form-item>
+        <el-form-item label="任务状态">
+         <el-select  v-model="UpdateForm.state"  placeholder="任务状态">
+    <el-option
+   v-for="item in pnowselect"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      >
+    </el-option>
+  </el-select>  
+        </el-form-item>
+        <el-form-item label="进度(%)">
+          <el-input  v-model="UpdateForm.percent"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="UpdateFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="HandleUpdate">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
+
+
 <el-dialog title="新增物资需求" :visible.sync="addplangoodsFormVisible" :close-on-click-modal="true">
       <el-form  :inline="true" :model="addgoodsplanForm"  class="demo-form-inline" label-width="80px">
       
@@ -326,7 +406,6 @@
           <el-input v-model="ViewForm.prname" :disabled="true" ></el-input>
         </el-form-item>
 
-             <el-button type="primary" @click="ClickUpdate">修改信息</el-button>
         </el-form>
         <el-form :inline="true" :model="ViewForm"  class="demo-form-inline" label-width="80px">
         <el-form-item label="计划开始">
@@ -374,14 +453,21 @@
         <el-form-item label="最近更新">
           <el-input v-model="ViewForm.date" :disabled="true" ></el-input>
         </el-form-item>
-
-
       </el-form>
-
       <div slot="footer" class="dialog-footer">
-        <el-button @click="ViewFormVisible = false ">取 消</el-button>
-        <el-button type="primary" @click="HandleUpdate">确 定</el-button>
-      </div>
+       
+          <div class="div-inline" v-if="this.ViewForm.state!='已完工'">
+            <el-button type="primary" @click="ClickUpdate">修改信息</el-button>
+            </div>
+            <div class="div-inline" v-if="this.ViewForm.state =='已完工'">
+             <el-button type="primary" @click="ClickUpdate" disabled>已完工</el-button>
+            </div>
+            <div class="div-inline"> 
+        <el-button type="success"  @click="ViewFormVisible = false ">确 定</el-button>
+        </div>
+
+        </div>
+      
     </el-dialog>
 
 
@@ -438,6 +524,7 @@ import {
           AddProgoods,
           deleteprojectgoods,
           addprojectgoods,
+          updateprogress,
     } from "../api/api";
 export default {
     data(){
@@ -502,7 +589,20 @@ export default {
              ImageFormVisible:false,
              addplangoodsFormVisible:false,
              UpdateForm:{
-               id:"",
+              id:"",
+              prname:"",
+              planstart:"",
+              planend:"",
+              actualstart:"",
+              actualend:"",
+              plancost:"",
+              actualcost:"",
+              planworking:"",
+              actualworking:"",
+              subcontractcost:"",
+              percent:"",
+              state:"",
+              admin :localStorage.getItem('User'),
              },
              ViewForm:{
                id:"",
@@ -609,14 +709,24 @@ export default {
           this.ViewForm = Object.assign({}, row);
          
       },
-      ClickUpdate(row){
+      ClickUpdate(){
       this.UpdateFormVisible = true;
       
-      this.UpdateForm = Object.assign({}, row);
+      // this.UpdateForm = Object.assign({}, row);
+      this.UpdateForm =this.ViewForm;
     
       },
       HandleUpdate(){
-        
+        updateprogress(this.UpdateForm).then(response => {
+           if(response.data ==1){
+          this.UpdateFormVisible = false;
+          this.getprogress();
+          alert("修改成功")
+           }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
       },
        ClickInsert(){
          this.InsertFormVisible = true;
@@ -734,3 +844,7 @@ export default {
   }
 }
 </script>
+<style>
+.div-inline{ display:inline} 
+</style>
+

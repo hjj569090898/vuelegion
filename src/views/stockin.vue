@@ -311,8 +311,16 @@ export default {
       if (this.nowid != "") {
         SearchStockIn(this.nowid)
           .then(response => {
-            this.StockIn = response.data;
+            if(response.data.code==0)
+            {
+              this.StockIn = null;
+            }
+            else if(response.data.code ==1)
+            {
+            this.StockIn = response.data.stockin;
+            this.PageInfo =1;
             console.log("查询成功");
+            }
           })
           .catch(function(response) {
             console.log(response); //发生错误时执行的代码

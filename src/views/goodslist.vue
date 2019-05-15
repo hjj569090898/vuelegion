@@ -14,6 +14,8 @@
       <el-option v-for="item in Selects" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
     <el-button type="text" @click="dialogTableVisible = true">仓储变动情况</el-button>
+
+    <el-button type="success" @click="Clickadd">+仓储入库</el-button>
   <el-table :data = tableDate style="width: 75%">
     <el-table-column label="货物编号" prop="id"></el-table-column>
     <el-table-column label="名称" prop="name"></el-table-column>
@@ -33,6 +35,50 @@
         :total="PageInfo">
       </el-pagination>
     </div>
+
+
+    <el-dialog title="物资入仓" :visible.sync="addgoodsFormVisible" :close-on-click-modal="true">
+      <el-form  :model="addgoodsForm"  class="demo-form-inline" label-width="80px">
+
+         <el-form-item label="物品名称">
+          <el-input v-model="addgoodsForm.name" ></el-input>
+        </el-form-item>
+
+        <el-form-item label="入仓数量">
+          <el-input-number v-model="addgoodsForm.number" ></el-input-number>
+        </el-form-item>
+
+        <el-form-item label="物品单价">
+          <el-input v-model="money"   ></el-input>
+        </el-form-item>
+
+      <el-form-item label="物品单位">
+          <el-input v-model="addgoodsForm.units" placeholder="个/辆/件/米/公斤" ></el-input>
+        </el-form-item>
+
+        
+          <el-form-item label="选择类型">
+                  <el-select
+                    v-model="addgoodsForm.type"
+                    style="width: 280px;"
+                    placeholder="请选择部门"
+                  >
+                    <el-option
+                      v-for="item in types"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+
+      </el-form>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addgoodsFormVisible = false ">取 消</el-button>
+        <el-button type="primary" @click="Handleaddgoods">确 定</el-button>
+      </div>
+    </el-dialog>
 
 <el-dialog title="仓储变动记录" :visible.sync="dialogTableVisible"  :close-on-click-modal="true">
   <el-table :data="goodsflow">
@@ -63,6 +109,7 @@
 import  {getGoods,
         getgoodsflow,
         goodsbyid,
+        GoodsIn,
 }  from "../api/api";
 export default {
         data () {
@@ -72,9 +119,21 @@ export default {
               nowname:"",
                 tableDate: [],
                 goodsflow:[],
+                types:[{value:"1",label:"材料"},{value:2,label :"设备"}],
+                addgoodsForm:{
+                  name:"",
+                  number:"",
+                  units:"",
+                  type:"",
+                  latelynum:"",
+                  latelydate:"",
+                  admin:""
+                },
+                money:"",
                 Selects:[{value:"",label:"其他"},{value:1,label:"材料"},{value:2,label :"设备"},{value:3,label:"其他"}],
                 nowid:"",
                 dialogTableVisible:false,
+                addgoodsFormVisible:false,
                 diacurrentPage:1,
                 diaPageInfo:1,
                 currentPage:1,
@@ -137,6 +196,23 @@ export default {
               this.nowpage =val;
            this.getflow(); 
         },
+        Clickadd()
+        {
+            this.addgoodsFormVisible =true;
+        },
+        Handleaddgoods(){
+          this.addgoodsForm.admin = localStorage.getItem("User");
+          GoodsIn(this.money,this.addgoodsForm).then((response)=> {
+                    if(response.data ==1)
+                    {
+                      alert("入库成功！");
+                      this.addgoodsFormVisible=false;
+                      this.getUserInfo();
+                    }
+                }).catch(function (error) {
+                    console.log(error);
+                });
+        }
     }
 }
 </script>
