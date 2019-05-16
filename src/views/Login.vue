@@ -5,8 +5,8 @@
                 <span class="title">乐建建筑维修工程管理系统</span>
             </div>
             <el-form :model="loginUser" :rules="rules" ref="loginForm" class="loginForm" label-width="60px">
-                <el-form-item label="工号" prop="username">
-                    <el-input v-model="loginUser.username" placeholder="请输入工号/手机号"></el-input>
+                <el-form-item label="账号" prop="username">
+                    <el-input v-model="loginUser.username" placeholder="请输入用户名"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
                     <el-input v-model="loginUser.password" placeholder="请输入密码" type="password"></el-input>

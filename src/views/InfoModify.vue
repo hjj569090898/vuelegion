@@ -62,7 +62,54 @@
   <img v-if="imageUrl" :src="imageUrl" class="avatar">
   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
 </el-upload>
-   </div></el-col>
+   </div>
+
+   <div v-if ="permissionable">
+
+            <div>
+              <span>&nbsp;</span>
+               <span>&nbsp;</span>
+                <span>&nbsp;</span>
+                 <span>&nbsp;</span>
+                  <span>&nbsp;</span>
+         <el-divider content-position="left">用户个人权限</el-divider>
+           <el-table
+    :data="userpermission"
+    border
+    style="width: 100%">
+    <el-table-column
+      prop="id"
+      label="权限编号"
+      width="215">
+    </el-table-column>
+    <el-table-column
+      prop="permission"
+      label="权限标志"
+      width="220">
+    </el-table-column>
+    <el-table-column
+      prop="name"
+      label="权限名称"
+      width="220">
+    </el-table-column>
+  </el-table>
+           </div>
+           <span>&nbsp;</span>
+                <span>&nbsp;</span>
+                 <span>&nbsp;</span>
+                 <span>&nbsp;</span>
+                <span>&nbsp;</span>
+                 <span>&nbsp;</span>
+      <el-divider content-position="left">修改用户个人权限</el-divider>
+       <el-cascader-multi v-model="checkList" @change="handlemultichange" :data="data"></el-cascader-multi>
+
+         <el-button
+        @click="ClickModifyPermission"
+          type="primary"
+          class="submit_btn"
+        >确定修改权限 </el-button>
+   </div>
+   </el-col>
 <el-col :span="3"><div><el-divider></el-divider></div></el-col>
     </el-row>
     
@@ -70,7 +117,7 @@
 </template>
 
 <script>
-import { getmyuser,register,infomodify } from "../api/api";
+import { getmyuser,register,infomodify,addpermission,getpermission } from "../api/api";
 export default {
   name: "register",
   data() {
@@ -89,10 +136,13 @@ export default {
       }
     };
     return {
-      
+      zifuchuan:"",
+      checkList:[],
+      userpermission:[],
       myuser:"",
       avatarurl:"",
       groupable:true,
+      permissionable:false,
       registerUser: {
         id:"",
         username:"",
@@ -137,19 +187,95 @@ export default {
             trigger: "blur"
           },{ min: 6, max: 20, message: "长度不正确", trigger: "blur" }
         ],
-      }
+      },
+       data: [
+        {
+          value: "",
+          label: "财务",
+          children: [
+            {
+              value: "auditing",
+              label: "财务审核"
+            },
+            {
+              value: "finance",
+              label: "财务流水查看"
+            }
+          ]
+        },
+        {
+          value: "",
+          label: "仓储",
+          children: [
+            {
+              value: "goods",
+              label: "仓储库存"
+            },
+            {
+              value: "stockin",
+              label: "入库申请"
+            },
+            {
+              value: "goodsapply",
+              label: "出库审核"
+            },
+            {
+              value: "goodsflow",
+              label: "库存流水查看"
+            }
+          ]
+        },
+        {
+          value: "",
+          label: "工程",
+          children: [
+            {
+              value: "project",
+              label: "工程管理"
+            },
+            {
+              value: "progress",
+              label: "任务添加"
+            }
+          ]
+        },
+        {
+          value: "",
+          label: "人事",
+          children: [
+            {
+              value: "getuser",
+              label: "人员查看"
+            },
+            {
+              value: "register",
+              label: "注册功能"
+            },
+            {
+              value: "deleteuser",
+              label: "账户删除"
+            },
+            {
+              value: "addpermission",
+              label: "用户权限修改"
+            }
+          ]
+        }
+      ],
     }
     
   },
   created() {
     this.userinfo();
-    
+    this.groupable= this.$route.query.groupable;
+    this.getpermissiontable();
   },
   methods: {
     userinfo(){
       console.log(this.groupable);
       
       this.myuser = this.$route.query.username;
+      this.permissionable =  this.$route.query.permissionable;
       console.log(this.myuser);
       this.groupable= this.$route.query.groupable;
          getmyuser(this.myuser).then(response => {
@@ -189,13 +315,43 @@ export default {
       console.log(this.registerUser);
           if( response.data.code==1){
             alert("修改成功！");
-            this.$router.push("/infoshow");
+            // this.$router.push("/infoshow");
+             this.$router.go(0);
 
           }
         })
         .catch(function(error) {
           console.log(error);
         });
+      },
+       getpermissiontable(){
+         if(this.$route.query.username=="")
+         {this.userpermission=""}
+         else{
+       
+      getpermission( this.$route.query.username).then(response => {
+          this.userpermission = response.data.permission;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+      }
+       },
+      ClickModifyPermission(){
+          
+      this.zifuchuan = this.checkList.join(",");
+      addpermission(this.$route.query.username, this.zifuchuan)
+        .then(response => {
+          if (response.data.code == 1) {
+            alert("权限修改成功！");
+            //  this.$router.push("/employee")
+            this.$router.go(0);
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    
       }
   },
   

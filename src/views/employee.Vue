@@ -129,7 +129,7 @@ export default {
 
     routerto(row){
       console.log(row.username);
-           this.$router.push({path:'/infomodify',query:{username:row.username,groupable:false}});
+           this.$router.push({path:'/infomodify',query:{username:row.username,groupable:false,permissionable:true}});
     },
        ClickDelete(id) {
       this.$confirm("是否删除该账户信息, 是否继续?", "提示", {

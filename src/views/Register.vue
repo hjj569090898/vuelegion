@@ -56,6 +56,11 @@
                     placeholder="请输入身份证号"
                   ></el-input>
                 </el-form-item>
+                <el-form-item label="生日" prop="birthday">
+              <div class="block">
+                <el-date-picker v-model="registerUser.birthday" type="date" placeholder="选择生日"></el-date-picker>
+              </div>
+            </el-form-item>
                 <el-form-item label="选择部门">
                   <el-select
                     v-model="registerUser.groupid"
@@ -91,7 +96,12 @@
               <el-divider>选择用户额外权限</el-divider>
               <el-checkbox-group v-model="permissions" size="small"></el-checkbox-group>
               <!-- <el-checkbox-button v-for="per in pers" :label="per.label" :key="per.id" :disabled="user == 'hjj'">{{per.label}}</el-checkbox-button> -->
-              <el-cascader-multi v-model="checkList" :value="hadpermission" @change="handlemultichange" :data="data"></el-cascader-multi>
+              <el-cascader-multi
+                v-model="checkList"
+                :value="hadpermission"
+                @change="handlemultichange"
+                :data="data"
+              ></el-cascader-multi>
               <!-- <el-form label-width="80px" ref="form" :model="form"  label-position="left">
         <el-form-item label="ISP: " prop="isp">
             <ele-multi-cascader
@@ -141,7 +151,7 @@
             <el-form-item label="用户名" prop="username">
               <el-input
                 v-model="registerUser.username"
-              disabled
+                disabled
                 style="width: 280px;"
                 placeholder="请输入用户名"
               ></el-input>
@@ -170,6 +180,11 @@
             </el-form-item>
             <el-form-item label="真实姓名" prop="mobile">
               <el-input v-model="registerUser.name" style="width: 280px;" placeholder="请输入真实姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="生日" prop="birthday">
+              <div class="block">
+                <el-date-picker v-model="registerUser.birthday" type="date" placeholder="选择生日"></el-date-picker>
+              </div>
             </el-form-item>
             <el-form-item label="身份证号" prop="mobile">
               <el-input v-model="registerUser.credit" style="width: 280px;" placeholder="请输入身份证号"></el-input>
@@ -216,9 +231,9 @@
 <script>
 import { username, register, addpermission } from "../api/api";
 // import {, deleteRequest} from './static/js/axiosarray';
-import axios from 'axios'
-import qs from 'qs'
-import { request } from 'https';
+import axios from "axios";
+import qs from "qs";
+import { request } from "https";
 export default {
   name: "register",
   data() {
@@ -237,14 +252,14 @@ export default {
       }
     };
     return {
-      zifuchuan:"",
+      zifuchuan: "",
       checkList: [],
       formlist: [],
-      testlist:["a1","b2","c1"],
+      testlist: ["a1", "b2", "c1"],
       form: {
         isp: []
       },
-      hadpermission:["goods","project","progress"],
+      hadpermission: ["goods", "project", "progress"],
       data: [
         {
           value: "",
@@ -252,12 +267,11 @@ export default {
           children: [
             {
               value: "auditing",
-              label: "财务审核",
+              label: "财务审核"
             },
             {
               value: "finance",
-              label: "财务流水查看",
-              
+              label: "财务流水查看"
             }
           ]
         },
@@ -295,7 +309,6 @@ export default {
               value: "progress",
               label: "任务添加"
             }
-         
           ]
         },
         {
@@ -329,13 +342,14 @@ export default {
         username: "",
         credit: "",
         mobile: "",
+        birthday: "",
         name: "",
         email: "",
         password: "",
         password2: "",
         groupid: ""
       },
-      isexits: "0",
+      isexits: 0,
       avatarurl: "",
       username: "",
       permissions: [],
@@ -410,22 +424,27 @@ export default {
       this.avatarurl =
         "http://localhost:8083/avatar/" + this.registerUser.username;
     },
-    permission(){
+    permission() {
       request({
-          url: "http://localhost:8083/addpermission/"+this.registerUser.username,
-          method:'post',
-          data: qs.stringify({"permission":this.testlist}) 
-        }).then(response =>{
-              console.log(response.data);
-        }).catch(function(error) {
+        url:
+          "http://localhost:8083/addpermission/" + this.registerUser.username,
+        method: "post",
+        data: qs.stringify({ permission: this.testlist })
+      })
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(function(error) {
           alert(error);
         });
-            
     },
     submitForm() {
-
       this.theregister();
-      this.theaddpermission();
+      // setTimeout(function() {
+      // callback(null);
+      //   }, 750);
+      // this.theaddpermission();
+
       // register(this.registerUser)
       //   .then(res => {
       //     // 注册成功
@@ -438,40 +457,44 @@ export default {
       //         if(response.data.code ==1)
       //         {
       //           alert("注册成功！")
-                
+
       //         }
       //       }).catch(function(error) {
       //           console.log(error);
       //   });
-      
+
       //     }
-        
+
       //     // this.$router.push("/infoShow");
       //   })
       //   .catch(function(error) {
       //     console.log(error);
       //   });
     },
-    theregister(){
-         register(this.registerUser)
+    theregister() {
+      register(this.registerUser)
         .then(res => {
-          console.log(res);
+          if (res.data.code == 1) {
+            this.registerUser.username = res.data.username;
+            this.theaddpermission();
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
         });
     },
-    theaddpermission(){
-      this.zifuchuan= this.checkList.join(',')
-      console.log(this.zifuchuan);
-      console.log(this.checkList);
-       addpermission(this.registerUser.username, this.zifuchuan).then(response => {
-              if(response.data.code ==1)
-              {
-                alert("注册成功！")
-                
-              }
-            }).catch(function(error) {
-                console.log(error);
+    theaddpermission() {
+      this.zifuchuan = this.checkList.join(",");
+      addpermission(this.registerUser.username, this.zifuchuan)
+        .then(response => {
+          if (response.data.code == 1) {
+            alert("注册成功！");
+             this.$router.push("/employee")
+          }
+        })
+        .catch(function(error) {
+          console.log(error);
         });
-
     },
     handleAvatarSuccess(res, file) {
       this.avatarurl = URL.createObjectURL(file.raw);
@@ -496,7 +519,7 @@ export default {
       console.log(this.checkList);
     },
     validateisexits() {
-       this.avatarurl =
+      this.avatarurl =
         "http://localhost:8083/avatar/" + this.registerUser.username;
       username(this.registerUser.username)
         .then(response => {
