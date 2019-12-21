@@ -125,6 +125,9 @@ export const AddProgress = params =>{return axios.post(`${host}/progress/`, para
 //修改任务
 export const updateprogress = (params2) =>{return axios.patch(`${host}/progress/`,params2)}
 
+//删除任务
+export const DeleteProgress = params =>{return axios.delete(`${host}/progress/${params}`)}
+
 //工程物品清单
 export const listpjGoods = (params,params2) =>{return axios.get(`${host}/projectgoods/?projectid=${params}`+`&page=${params2}`)}
 

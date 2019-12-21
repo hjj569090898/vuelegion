@@ -23,8 +23,8 @@
     <!-- @keyup.enter.native="SeachClick(Search.id)"  -->
 
     <el-table :data="Project"  border style="width: 100%">
-      <el-table-column prop="id" label="项目编号" width="140"></el-table-column>
-      <el-table-column prop="pjname" label="工程名" width="160"></el-table-column>
+      <el-table-column prop="id" label="项目编号" width="100"></el-table-column>
+      <el-table-column prop="pjname" label="工程名" width="190"></el-table-column>
       <el-table-column prop="planstart" label="计划开始时间" width="130"></el-table-column>
       <el-table-column prop="planend" label="计划结束时间" width="130"></el-table-column>
       <el-table-column prop="actualstart" label="实际开始时间" width="130"></el-table-column>
@@ -32,7 +32,7 @@
       <el-table-column prop="leader" label="负责人" width="110"></el-table-column>
       <el-table-column prop="state" label="状态" width="110"></el-table-column>
       <el-table-column prop="pnow" label="阶段" width="110"></el-table-column>
-      <el-table-column label="操作" width="220">
+      <el-table-column label="操作" width="130">
         <template slot-scope="scope">
           <el-button @click="handdle(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button>
 
@@ -430,6 +430,16 @@ export default {
     },
     handleInsert() {
       console.log(this.InsertForm);
+      if(this.InsertForm.actualstart=="")
+      {
+        this.InsertForm.actualstart ==this.InsertForm.planstart;
+
+      }
+      if(this.InsertForm.actualend=="")
+      {
+        this.InsertForm.actualend ==this.InsertForm.planend;
+        
+      }
       AddProject(this.InsertForm)
         .then(response => {
           this.InsertFormVisible = false;

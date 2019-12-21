@@ -18,14 +18,14 @@
       <el-table-column prop="audidate" label="审批日" width="110"></el-table-column>
       </el-table>
 
- <el-dialog title="项目立项" :visible.sync="InsertFormVisible" :close-on-click-modal="true">
+ <el-dialog title="报销申请" :visible.sync="InsertFormVisible" :close-on-click-modal="true">
         <el-form :model="InsertForm" label-width="80px">
 
           <el-form-item label="金额">
             <el-input v-model="InsertForm.money"></el-input>
           </el-form-item>
 
-           <el-form-item label="申请描述(原因)">
+           <el-form-item label="描述(原因)">
             <el-input v-model="InsertForm.reason"></el-input>
           </el-form-item>
 
@@ -99,6 +99,7 @@ export default {
           {
               alert("添加成功");
               this.InsertFormVisible =false;
+              this.getList();
           }
         })
         .catch(function(error) {

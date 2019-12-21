@@ -20,7 +20,7 @@
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="info">个人信息</el-dropdown-item>
-                <el-dropdown-item command="resetpw">密码修改</el-dropdown-item>
+                <!-- <el-dropdown-item command="resetpw">密码修改</el-dropdown-item> -->
                 <el-dropdown-item command="logout">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -120,7 +120,7 @@ export default {
   border-bottom: 2px solid #1f2d3d;
 }
 .logo-container {
-  line-height: 60px;
+  /* line-height: 60px; */
   min-width: 300px;
 }
 .logo {

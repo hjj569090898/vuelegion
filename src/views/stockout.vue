@@ -1,12 +1,12 @@
 <template>
     <div>
-        <el-divider content-position="left">审核</el-divider>
+        <el-divider content-position="left">审核物资申请</el-divider>
 
   
 
-<el-badge :value= currentPage class="item">
+<!-- <el-badge :value= currentPage class="item">
   <el-button size="small">未审核</el-button>
-</el-badge>
+</el-badge> -->
 
 
 <el-dialog title="审核申请信息" :visible.sync="UpdateFormVisible" :close-on-click-modal="true">
@@ -52,10 +52,10 @@
    <el-table :data="listgoodsapply"  
     border style="width: 100%">
 <el-table-column prop="id" label="编号" width="140"></el-table-column>
-<el-table-column prop="goodsid" label="商品编号" width="160"></el-table-column>
-<el-table-column prop="applynum" label="申请数量" width="130"></el-table-column>
-<el-table-column prop="projectid" label="工程编号" width="130"></el-table-column>
-<el-table-column prop="date" label="申请时间" width="130"></el-table-column>
+<el-table-column prop="goodsid" label="商品编号" width="110"></el-table-column>
+<el-table-column prop="applynum" label="申请数量" width="90"></el-table-column>
+<el-table-column prop="projectid" label="工程编号" width="90"></el-table-column>
+<el-table-column prop="date" label="申请时间" width="160"></el-table-column>
 <el-table-column prop="reason" label="申请原因" width="130"></el-table-column>
 <!-- <el-table-column prop="progoodsid" label="申请" width="130"></el-table-column> -->
 <el-table-column prop="state" label="申请状态" width="110">
@@ -187,6 +187,7 @@ export default {
       audiGoodsApply(this.UpdateForm).then(res => {
         this.UpdateFormVisible = false;
         alert("审核成功！");
+        this.getList();
       }) .catch(function(error) {
           console.log(error);
         });

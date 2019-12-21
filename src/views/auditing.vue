@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-divider content-position="left">审核申请信息</el-divider>
+        <!-- <el-divider content-position="left">审核申请信息</el-divider> -->
 <el-input
       :placeholder="tip"
       v-model="queryid"
@@ -20,9 +20,9 @@
       <el-option v-for="item in stateSelects" :key="item.value" :label="item.label" :value="item.value"></el-option>
     </el-select>
 
-<el-badge :value= currentPage class="item">
+<!-- <el-badge :value= currentPage class="item">
   <el-button size="small">未审核</el-button>
-</el-badge>
+</el-badge> -->
 <el-dialog title="审核申请信息" :visible.sync="UpdateFormVisible" :close-on-click-modal="true">
       <el-form :model="UpdateForm" label-width="80px">
         <el-form-item label="审核编号">
@@ -192,7 +192,7 @@ export default {
         applicant:"" ,
         date:"",
         adate:"",
-        advice:"",
+        advice:"无",
         reason:"",
       },
         }
@@ -228,10 +228,11 @@ export default {
       this.nowuser = localStorage.getItem("User");
       // this.UpdateForm.adate = new Date();
       var myDate = new Date();
-      this.UpdateForm.adate = myDate.toLocaleString( );;
+      this.UpdateForm.adate = myDate.toLocaleString( );
       auditi(this.UpdateForm.id,this.UpdateForm.state,this.nowuser,this.UpdateForm.adate,this.UpdateForm.advice).then(res => {
         this.UpdateFormVisible = false;
         alert("修改成功！");
+        this.getList();
       }) .catch(function(error) {
           console.log(error);
         });

@@ -22,7 +22,7 @@
           <span v-else style="color: #37B328">{{ scope.row.money }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="收支类型" prop="type">
+      <el-table-column label="收支类型" prop="type" width="160">
            <template slot-scope="scope">
           <span v-if="scope.row.type =='合同结算'" style="color: #0000FF">合同</span>
           <span v-else-if="scope.row.type =='个人'" style="color: bule">个人报销</span>
@@ -30,7 +30,7 @@
           <span v-else style="color: #37B328">{{scope.row.type}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="描述" prop="descs"></el-table-column>
+      <el-table-column label="描述" prop="descs" width="220"></el-table-column>
       <el-table-column label="审核人" prop="admin"></el-table-column>
       <el-table-column label="时间" prop="date"></el-table-column>
     </el-table>

@@ -18,16 +18,16 @@
      </div>
 
  <el-table :data="listuser" border style="width: 100%">
-      <el-table-column prop="id" label="编号" width="140"></el-table-column>
-      <el-table-column prop="username" label="工号" width="140"></el-table-column>
-      <el-table-column prop="name" label="真实姓名" width="150"></el-table-column>
-      <el-table-column prop="credit" label="身份证号" width="110"></el-table-column>
-      <el-table-column prop="mobile" label="手机号" width="110"></el-table-column>
-      <el-table-column prop="email" label="邮箱" width="110"></el-table-column>
-      <el-table-column prop="groupid" label="部门号" width="110"></el-table-column>
+      <el-table-column prop="id" label="编号" width="100"></el-table-column>
+      <el-table-column prop="username" label="工号" width="120"></el-table-column>
+      <el-table-column prop="name" label="真实姓名" width="120"></el-table-column>
+      <el-table-column prop="credit" label="身份证号" width="200"></el-table-column>
+      <el-table-column prop="mobile" label="手机号" width="160"></el-table-column>
+      <el-table-column prop="email" label="邮箱" width="160"></el-table-column>
+      <el-table-column prop="groupid" label="部门号" width="80"></el-table-column>
       <el-table-column label="操作" width="220">
         <template slot-scope="scope">
-          <el-button @click="ClickList(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button>
+          <!-- <el-button @click="ClickList(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button> -->
           <el-button
             @click="routerto(scope.row)"
             type="text"

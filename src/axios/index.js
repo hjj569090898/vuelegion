@@ -59,6 +59,12 @@ axios.interceptors.response.use(response => {
     {
         Message.error("抱歉，操作失败，请检查您的数据。")
     }
+    else if(status ==404)
+    {
+        localStorage.removeItem('eleToken');
+        Message.error('你的验证信息已到期，请重新登陆')
+    }
+
 
     return Promise.reject(error)
 })

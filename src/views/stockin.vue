@@ -17,9 +17,9 @@
 
 
       <el-table :data="StockIn" border style="width: 100%">
-      <el-table-column prop="id" label="入库编号" width="140"></el-table-column>
-      <el-table-column prop="goodsid" label="物品编码" width="140"></el-table-column>
-      <el-table-column prop="name" label="物品名称" width="150"></el-table-column>
+      <el-table-column prop="id" label="入库编号" width="100"></el-table-column>
+      <el-table-column prop="goodsid" label="物品编码" width="100"></el-table-column>
+      <el-table-column prop="name" label="物品名称" width="110"></el-table-column>
       <el-table-column prop="price" label="价格" width="110"></el-table-column>
       <el-table-column prop="num" label="数量" width="110"></el-table-column>
       <el-table-column prop="allprice" label="总价" width="110"></el-table-column>
@@ -31,12 +31,11 @@
           <span v-else style="color: #37B328">{{ scope.row.state }}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="applicant" label="申请人" width="130"></el-table-column>
-      <el-table-column prop="date" label="申请时间" width="200"></el-table-column>
+      <el-table-column prop="applicant" label="申请人" width="110"></el-table-column>
+      <el-table-column prop="date" label="申请时间" width="180"></el-table-column>
       <el-table-column prop="reason" label="申请原因" width="180"></el-table-column>
-      <el-table-column label="操作" width="220">
+      <!-- <el-table-column label="操作" width="150">
         <template slot-scope="scope">
-          <el-button @click="ClickList(scope.row)" type="text" size="medium" icon="el-icon-view">查看</el-button>
           <el-button
             @click="ClickUpdate(scope.row)"
             type="text"
@@ -50,7 +49,7 @@
             icon="el-icon-delete"
           >删除</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
 
   <el-dialog title="添加入库申请信息" :visible.sync="InsertFormVisible" :close-on-click-modal="true">
@@ -78,9 +77,9 @@
       >
     </el-option>
   </el-select>      
-      <el-form-item label="当前库存">
+      <!-- <el-form-item label="当前库存">
           <el-input v-model="Stock.number" :disabled="true"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="申请数量" >
           <el-input-number v-model="InsertForm.num"></el-input-number>
         </el-form-item>
@@ -233,7 +232,7 @@ export default {
         id: "",
         admin: ""
       },
-      tip: "入库编号/物品编号/管理员",
+      tip: "入库编号",
       StockIn: [], //入库信息总数据
       PageInfo: [] //数据总数，上下个url
     };
@@ -276,7 +275,9 @@ export default {
     handleIdChange:function(val)
     {
       this.InsertForm.applicant = localStorage.getItem("User");
-      this.InsertForm.date = "2019-05-05 ";
+      var myDate = new Date();
+      this.InsertForm.date = myDate.toLocaleString( );
+      // this.InsertForm.date = "2019-05-05 ";
       console.log(this.InsertForm);
     },
     ClickInsert(){
@@ -287,8 +288,7 @@ export default {
       
       StockIn(this.InsertForm).then(response=>{
         this.InsertFormVisible = false;
-        console.log(InsertForm);
-        console.log("添加成功");
+        this.getList();
       }).catch(function(error){
         console.log(error);
       });

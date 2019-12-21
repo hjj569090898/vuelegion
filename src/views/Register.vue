@@ -1,12 +1,12 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="7">
+      <el-col :span="5">
         <div>
           <el-divider>&nbsp;</el-divider>
         </div>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="10">
         <el-container>
           <el-main>
             <div v-if="active===0">
@@ -87,7 +87,7 @@
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload"
               >
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <img v-if="avatarurl" :src="imageUrl" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
             </div>
@@ -234,6 +234,7 @@ import { username, register, addpermission } from "../api/api";
 import axios from "axios";
 import qs from "qs";
 import { request } from "https";
+import { Message, Loading } from 'element-ui';
 export default {
   name: "register",
   data() {
@@ -358,9 +359,8 @@ export default {
         { value: "2", label: "人事部" },
         { value: "3", label: "仓储部" },
         { value: "4", label: "财务部" },
-        { value: "5", label: "计划部" },
-        { value: "6", label: "生产部" },
-        { value: "7", label: "其他" }
+        { value: "5", label: "工程部" },
+        { value: "6", label: "其他" }
       ],
       rules: {
         username: [
@@ -370,8 +370,8 @@ export default {
             max: 30,
             message: "长度在 2 到 30 个字符",
             trigger: "blur"
-          },
-          { validator: validatePass3, trigger: "blur" }
+          }
+          // { validator: validatePass3, trigger: "blur" }
         ],
         email: [
           {
@@ -444,7 +444,6 @@ export default {
       // callback(null);
       //   }, 750);
       // this.theaddpermission();
-
       // register(this.registerUser)
       //   .then(res => {
       //     // 注册成功
@@ -452,19 +451,15 @@ export default {
       //       // this.permission();
       //       // this.registerusername = res.data.username;
       //       // qs.stringify({ testlist }, { indices: false });
-
       //       addpermission(this.registerUser.username, this.testlist).then(response => {
       //         if(response.data.code ==1)
       //         {
       //           alert("注册成功！")
-
       //         }
       //       }).catch(function(error) {
       //           console.log(error);
       //   });
-
       //     }
-
       //     // this.$router.push("/infoShow");
       //   })
       //   .catch(function(error) {
@@ -502,7 +497,6 @@ export default {
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
-
       if (!isJPG) {
         this.$message.error("上传头像图片只能是 JPG 格式!");
       }
@@ -527,6 +521,7 @@ export default {
             this.isexits = 0; //不存在则为0 ，为0可以注册
           } else if (response.data.isexits == 1) {
             this.isexits = 1; //存在为1,不能注册
+            Message.error("用户已存在!");
           }
           console.log(response.data.isexits);
         })
@@ -534,7 +529,6 @@ export default {
           console.log(error);
         });
     },
-
     ispChange(values, items) {
       this.outputs.values = values;
       this.outputs.items = items;
@@ -576,4 +570,3 @@ body {
   margin: 0 auto;
 }
 </style>
-

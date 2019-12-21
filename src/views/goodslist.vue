@@ -10,12 +10,15 @@
     />
        
     <el-button type="success" round @click="SeachClick">查询</el-button>
-  <el-select v-model="nowstate" placeholder="全部" style="width: 200px" @change="getUserInfo">
+  <!-- <el-select v-model="nowstate" placeholder="全部" style="width: 200px" @change="getUserInfo">
       <el-option v-for="item in Selects" :key="item.value" :label="item.label" :value="item.value"></el-option>
-    </el-select>
-    <el-button type="text" @click="dialogTableVisible = true">仓储变动情况</el-button>
+    </el-select> -->
+    <!-- <el-button type="text" @click="dialogTableVisible = true">仓储变动情况</el-button> -->
 
     <el-button type="success" @click="Clickadd">+仓储入库</el-button>
+
+    <el-button type="text" @click="dialogTableVisible = true">仓储变动情况</el-button>
+
   <el-table :data = tableDate style="width: 75%">
     <el-table-column label="货物编号" prop="id"></el-table-column>
     <el-table-column label="名称" prop="name"></el-table-column>
@@ -80,14 +83,14 @@
       </div>
     </el-dialog>
 
-<el-dialog title="仓储变动记录" :visible.sync="dialogTableVisible"  :close-on-click-modal="true">
+<el-dialog title="仓储变动记录" :visible.sync="dialogTableVisible" width="60%" :close-on-click-modal="true">
   <el-table :data="goodsflow">
     <el-table-column property="id" label="编号" width="150"></el-table-column>
-    <el-table-column property="goodsid" label="物品编号" width="200"></el-table-column>
-    <el-table-column property="num" label="数量变化"></el-table-column>
-     <el-table-column property="date" label="日期" width="100"></el-table-column>
+    <el-table-column property="goodsid" label="物品编号" width="120"></el-table-column>
+    <el-table-column property="num" label="数量变化" width="120"></el-table-column>
+     <el-table-column property="date" label="日期" width="210"></el-table-column>
       <el-table-column property="admin" label="管理员" width="100"></el-table-column>
-       <el-table-column property="descs" label="描叙" width="100"></el-table-column>
+       <el-table-column property="descs" label="描叙" width="160"></el-table-column>
     
   </el-table>
   <div class="block">

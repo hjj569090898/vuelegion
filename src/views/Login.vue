@@ -100,7 +100,7 @@ export default {
 .login {
   position: relative;
   width: 100%;
-  height: 58rem;
+  height: 46rem;
   background: url(../assets/bg.png) no-repeat center center;
   background-size: 100% 100%;
 }

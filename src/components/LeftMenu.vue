@@ -56,8 +56,8 @@ export default {
           icon: "el-le-iconxiangmushenhe",
           name: "项目管理",
           path: "fund1",
-          children: [{ path: "Project", name: "  项目工程" },
-          { path: "contract", name: "  项目合同" }
+          children: [{ path: "Project", name: "  项目工程" }
+          // { path: "contract", name: "  项目合同" }
           ]
         },
         {

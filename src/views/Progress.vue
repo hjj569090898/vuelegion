@@ -10,15 +10,30 @@
 
      <el-table :data="Progress"  
     border style="width: 100%">
-<el-table-column prop="prname" label="任务名" width="160"></el-table-column>
-<el-table-column prop="planstart" label="计划开始时间" width="130"></el-table-column>
-<el-table-column prop="planend" label="计划结束时间" width="130"></el-table-column>
-<el-table-column prop="actualstart" label="实际开始时间" width="130"></el-table-column>
-<el-table-column prop="actualend" label="实际结束时间" width="130"></el-table-column>
-<el-table-column prop="plancost" label="计划花费" width="110"></el-table-column>
-<el-table-column prop="actualcost" label="当前/实际花费" width="110"></el-table-column>
-<el-table-column prop="subcontractcost" label="分包费用" width="110"></el-table-column>
-<el-table-column prop="state" label="状态" width="110"></el-table-column>
+<el-table-column prop="prname" label="任务名" width="150"></el-table-column>
+<el-table-column prop="planstart" label="计划开始时间" width="110"></el-table-column>
+<el-table-column prop="planend" label="计划结束时间" width="110"></el-table-column>
+<el-table-column prop="actualstart" label="实际开始时间" width="110"></el-table-column>
+<el-table-column prop="actualend" label="实际结束时间" width="110"></el-table-column>
+<el-table-column prop="plancost" label="计划花费" width="80"></el-table-column>
+<el-table-column prop="actualcost" label="当前/实际花费" width="80">
+<template slot-scope="scope">
+          <span v-if="scope.row.actualcost  == scope.row.plancost" style="color: #0000FF">{{ scope.row.actualcost }}</span>
+          <span v-else-if="scope.row.actualcost  >= scope.row.plancost" style="color: red">{{ scope.row.actualcost }}</span>
+          <span v-else style="color: #37B328">{{ scope.row.actualcost }}</span>
+        </template>
+</el-table-column>
+<el-table-column prop="planworking" label="计划人工" width="80"></el-table-column>
+<el-table-column prop="actualworking" label="当前人工" width="80">
+  <template slot-scope="scope">
+          <span v-if="scope.row.actualworking  == scope.row.planworking" style="color: #0000FF">{{ scope.row.actualworking }}</span>
+          <span v-else-if="scope.row.actualworking  >= scope.row.planworking" style="color: red">{{ scope.row.actualworking }}</span>
+          <span v-else style="color: #37B328">{{ scope.row.actualworking }}</span>
+        </template>
+</el-table-column>
+<el-table-column prop="subcontractcost" label="分包费用" width="80"></el-table-column>
+
+<el-table-column prop="state" label="状态" width="90"></el-table-column>
  <el-table-column label="操作" width="140">
         <template slot-scope="scope">
            <el-button @click="ClickList(scope.row)"
@@ -29,7 +44,7 @@
           <el-button
             type="text"
             size="medium"
-             @click="ClickList(scope.row)"
+              @click="ClickDeleteProgress(scope.row.id)"
             icon="el-icon-delete"
           >删除</el-button>
         </template>
@@ -91,7 +106,7 @@
             <div v-if="scope.row.applynum!=0">
                <el-button disabled type="text" size="medium" icon="el-icon-view">等待审核</el-button>
             </div>
-            <div v-if="scope.row.applynum==0 && scope.row.actual!=0" >
+            <div v-if="scope.row.applynum==0 && scope.row.actualnum!=0" >
           <el-button
             @click="Clickdelete(scope.row)"
             type="text"
@@ -419,9 +434,9 @@
         <el-form-item label="计划费用">
           <el-input v-model="ViewForm.plancost" :disabled="true" ></el-input>
         </el-form-item>
-      </el-form>
+      <!-- </el-form> -->
 
-   <el-form :inline="true" :model="ViewForm"  class="demo-form-inline" label-width="80px">
+   <!-- <el-form :inline="true" :model="ViewForm"  class="demo-form-inline" label-width="80px"> -->
         <el-form-item label="实际开始">
           <el-input v-model="ViewForm.planstart" :disabled="true" ></el-input>
         </el-form-item>
@@ -447,7 +462,7 @@
         </el-form-item>
 
           <el-form-item label="进度">
-          <el-input v-model="ViewForm.state" :disabled="true" ></el-input>
+          <el-input v-model="ViewForm.percent" :disabled="true" ></el-input>
         </el-form-item>
 
         <el-form-item label="最近更新">
@@ -504,7 +519,7 @@
     </el-dialog>
   
       <div slot="footer" class="dialog-footer">
-        <el-button @click="addimageFormVisible = false">取 消</el-button>
+        <!-- <el-button @click="addimageFormVisible = false">取 消</el-button> -->
         <!-- <el-button type="" @click="onSubmit">提交</el-button> -->
         <el-button type="primary" @click="Handleupload">添加完成 </el-button>
       </div>
@@ -525,6 +540,7 @@ import {
           deleteprojectgoods,
           addprojectgoods,
           updateprogress,
+          DeleteProgress,
     } from "../api/api";
 export default {
     data(){
@@ -693,6 +709,7 @@ export default {
       getprogress(){
         listProgress(this.projectid,this.currentPage).then(response => {
           this.Progress = response.data.Project;
+          this.PageInfo =response.data.page;
         })
         .catch(function(error) {
           console.log(error);
@@ -771,14 +788,45 @@ export default {
       },
       Handleupload(file){
           // this.param.append("id",this.UpdateForm.id)    
-          this.param.append("file",this.file)  
-        uploadimage(this.$route.query.projectid,this.param) 
-          .then(res=>{
-            console.log(res);
-            alert(res);
-          })
-          addimageFormVisible = false;
+          // this.param.append("file",this.file)  
+        // uploadimage(this.$route.query.projectid,this.param) 
+          // .then(res=>{
+            // console.log(res);
+            this.getimage();
+            this.addimageFormVisible =false;
+            
+          // })
+          // addimageFormVisible = false;
       },
+      ClickDeleteProgress(id) {
+      this.$confirm("是否删除该任务信息, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+        center: true
+      })
+        .then(() => {
+          DeleteProgress(id)
+            .then(response => {
+              this.getprogress();
+              this.$message({
+            type: "success",
+            message: "删除成功!"
+          });
+        
+            })
+            .catch(function(error) {
+              console.log(error);
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+        
+    },
       handleRemove(file, fileList) {
         console.log(file, fileList);
       },
@@ -805,6 +853,7 @@ export default {
         if(response.data.code =="1")
         {
           alert("添加申请成功！")
+          this.getPjgoods();
           this.addplangoodsFormVisible =false;
         }
       })
@@ -819,6 +868,7 @@ export default {
         {
           alert("申请成功提交！")
           this.addplangoodsFormVisible =false;
+          this.getPjgoods();
         }
       })
       .catch(function(error) {

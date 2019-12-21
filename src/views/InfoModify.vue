@@ -80,17 +80,17 @@
     <el-table-column
       prop="id"
       label="权限编号"
-      width="215">
+      width="100">
     </el-table-column>
     <el-table-column
       prop="permission"
       label="权限标志"
-      width="220">
+      width="150">
     </el-table-column>
     <el-table-column
       prop="name"
       label="权限名称"
-      width="220">
+      width="170">
     </el-table-column>
   </el-table>
            </div>
@@ -101,7 +101,7 @@
                 <span>&nbsp;</span>
                  <span>&nbsp;</span>
       <el-divider content-position="left">修改用户个人权限</el-divider>
-       <el-cascader-multi v-model="checkList" @change="handlemultichange" :data="data"></el-cascader-multi>
+       <el-cascader-multi v-model="checkList"  :data="data"></el-cascader-multi>
 
          <el-button
         @click="ClickModifyPermission"
@@ -159,9 +159,8 @@ export default {
         { value: "2", label: "人事部" },
         { value: "3", label: "仓储部" },
         { value: "4", label: "财务部" },
-        { value: "5", label: "计划部" },
-        { value: "6", label: "生产部" },
-        { value: "7", label: "其他" }
+        { value: "5", label: "工程部" },
+        { value: "6", label: "其他" }
       ],
       rules: {
         email: [
@@ -285,7 +284,7 @@ export default {
         .catch(function(error) {
           console.log(error);
         });
-        if(this.myuser==null){
+        if(this.myuser==""){
           this.avatarurl = "http://localhost:8083/avatar/"+localStorage.getItem("User");
            this.imageUrl =  require('../assets/avatar/'+localStorage.getItem("User")+'.jpg')//"../assets/"+this.myuser+".jpg";
         }

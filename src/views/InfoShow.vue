@@ -46,8 +46,8 @@
          <el-divider content-position="left">头像</el-divider>
 <div class="demo-image__placeholder">
 <div class="block">
-    <span class="demonstration">默认</span>
-    <el-image :src="src"></el-image>
+    <span class="demonstration"></span>
+    <el-image :src="src" width="250px"></el-image>
 
   </div>
 </div>
@@ -58,8 +58,8 @@
   </el-tab-pane>
     <el-tab-pane label="权限信息">权限信息
     <el-row>
-      <el-col :span="3"><el-divider content-position="left">&nbsp;</el-divider></el-col>
-         <el-col :span="9"><div>
+      <el-col :span="2"><el-divider content-position="left">&nbsp;</el-divider></el-col>
+         <el-col :span="10"><div>
            <el-divider content-position="left">用户个人权限</el-divider>
            <el-table
     :data="userpermission"
@@ -83,7 +83,7 @@
   </el-table>
 
            </div></el-col>
-         <el-col :span="9"><div>
+         <el-col :span="10"><div>
            <el-divider content-position="left">所在部门权限</el-divider>
            <el-table
     :data="groupmission"
@@ -106,7 +106,7 @@
     </el-table-column>
            </el-table>
            </div></el-col>
-           <el-col :span="3"><el-divider content-position="left">&nbsp;</el-divider></el-col>
+           <el-col :span="2"><el-divider content-position="left">&nbsp;</el-divider></el-col>
     </el-row>
     </el-tab-pane>
 
