@@ -422,12 +422,12 @@ export default {
     },
     getList() {
       this.avatarurl =
-        "http://localhost:8083/avatar/" + this.registerUser.username;
+        "http://localhost:8080/avatar/" + this.registerUser.username;
     },
     permission() {
       request({
         url:
-          "http://localhost:8083/addpermission/" + this.registerUser.username,
+          "http://localhost:8080/addpermission/" + this.registerUser.username,
         method: "post",
         data: qs.stringify({ permission: this.testlist })
       })
@@ -514,7 +514,7 @@ export default {
     },
     validateisexits() {
       this.avatarurl =
-        "http://localhost:8083/avatar/" + this.registerUser.username;
+        "http://localhost:8080/avatar/" + this.registerUser.username;
       username(this.registerUser.username)
         .then(response => {
           if (response.data.isexits == 0) {

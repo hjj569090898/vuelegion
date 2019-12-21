@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-let host ='http://127.0.0.1:8083'
+let host ='http://127.0.0.1:8080'
 
 //获取库存信息
 // export const getGoods =  (params,params2,params3) =>{return axios.get(`${host}/goods/?page=${params}`+`&type=${params2}`+`&search=${params3}`)};

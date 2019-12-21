@@ -559,7 +559,7 @@ export default {
             Progress:[],
              activeNames: ['1'],
              currentPage:1,
-             imageurl:"http://localhost:8083/upload/"+this.$route.query.projectid,
+             imageurl:"http://localhost:8080/upload/"+this.$route.query.projectid,
               fileList:[],
               
         dialogImageUrl:'',

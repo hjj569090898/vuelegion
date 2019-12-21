@@ -1,7 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
 
-let baseurl = 'http://localhost:8083/'
+let baseurl = 'http://localhost:8080/'
 function getRequest (apiPath, params, successCallback, errorCallback) {
   let url = baseurl + apiPath
  let req = axios.get(url, {

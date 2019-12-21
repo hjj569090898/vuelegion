@@ -285,11 +285,11 @@ export default {
           console.log(error);
         });
         if(this.myuser==""){
-          this.avatarurl = "http://localhost:8083/avatar/"+localStorage.getItem("User");
+          this.avatarurl = "http://localhost:8080/avatar/"+localStorage.getItem("User");
            this.imageUrl =  require('../assets/avatar/'+localStorage.getItem("User")+'.jpg')//"../assets/"+this.myuser+".jpg";
         }
         else{
-           this.avatarurl = "http://localhost:8083/avatar/"+this.myuser;
+           this.avatarurl = "http://localhost:8080/avatar/"+this.myuser;
           this.imageUrl =  require('../assets/avatar/'+this.myuser+'.jpg')//"../assets/"+this.myuser+".jpg";
         }
       
